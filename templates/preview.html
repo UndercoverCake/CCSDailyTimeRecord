@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+  <head>
+
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{% static '../static/bootstrap-5.1.3-dist/css/bootstrap.min.css' %}"
+    />
+    <link
+      rel="shortcut icon"
+      href="{% static '../static/images/seal.png' %}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static '../static/fontawesome-free-6.3.0-web/css/all.min.css' %}"
+    />
+
+    <title>Preview</title>
+    <style>
+      /* .custom-loader {
+        position: fixed;
+        top: 50%;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: radial-gradient(farthest-side, #123512 94%, #0000) top/4px
+            4px no-repeat,
+          conic-gradient(#0000 30%, #123512);
+        -webkit-mask: radial-gradient(
+          farthest-side,
+          #0000 calc(100% - 4px),
+          #000 0
+        );
+        animation: s3 1s infinite linear;
+      } */
+
+      @keyframes s3 {
+        100% {
+          transform: rotate(1turn);
+        }
+      }
+
+      html {
+        --scrollbarBG: #e9e9e9;
+        --thumbBG: #123512;
+      }
+
+      body {
+        background-color: #e9e9e9;
+        background-repeat: no-repeat;
+        background-size: cover;
+        min-height: 100vh;
+        margin-left: 330px;
+        margin-right: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+      }
+
+      body::-webkit-scrollbar {
+        height: 11px;
+        width: 11px;
+      }
+
+      body::-webkit-scrollbar-track {
+        background: var(--scrollbarBG);
+      }
+
+      body::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG);
+        border-radius: 6px;
+        border: 3px solid var(--scrollbarBG);
+      }
+
+      * {
+        font-family: "Be_Vietnam_Pro", sans-serif;
+      }
+
+      .grid_form_name {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4rem;
+      }
+      .grid_form_date {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4rem;
+      }
+
+      @media print {
+        select {
+          border: none;
+        }
+
+        .dropdown {
+          display: none !important;
+        }
+
+        select option[disabled] {
+          display: none;
+        }
+
+        .row-checkbox {
+          display: none;
+        }
+
+        .slash {
+          display: none;
+        }
+
+        .blank {
+          display: none;
+        }
+
+
+        .hide-in-print {
+          display: none;
+        }
+
+
+
+        .print-container {
+          display: block;
+        }
+
+        .sidebar {
+          display: none;
+        }
+        body {
+          margin: 0;
+        }
+
+        #printBtn {
+          display: none;
+        }
+
+        #generateBtn {
+          display: none;
+        }
+
+        #editBtn {
+          display: none;
+        }
+
+        #arrow {
+          display: none;
+        }
+        /* apply similar styles to any other buttons or arrows you want to exclude */
+      }
+
+      td.blank.border-right {
+          display: table-cell;
+          border-right: thin solid black;
+        }
+
+      .grid_form_boxes div {
+        margin: 2rem auto;
+      }
+
+      .btn_hover {
+        background-color: #123512;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn_hover:hover {
+        background: #ffffff;
+        color: #2c2c2c;
+        border-width: 1.5px;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      .btn_phover {
+        background: #e9e9e9;
+        color: #123512;
+        border-width: 1.5px;
+        border-color: #123512;
+      }
+
+      .btn_phover:hover {
+        background: #fefefe;
+        color: #123512;
+        border-width: 1.5px;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      .btn_logout {
+        background: #123512;
+        color: #ffffff;
+        /* border-style: 1px;
+        border-color: #123512; */
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn_lhover:hover {
+        background: #fefefe;
+        color: #123512;
+        border-width: 1.5px;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      * {
+        font-size: 9px;
+      }
+
+      .table-row.blocked {
+        background-color: #ccc;
+        opacity: 0.5;
+      }
+
+      .sidebar {
+        height: 100%;
+        width: 325px; /* adjust as needed */
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #123512;
+        overflow-x: hidden;
+        padding-top: 20px;
+        cursor: pointer;
+      }
+
+      .list-group {
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        background-color: none;
+      }
+
+      .list-group-item {
+        padding: 10px;
+        border: none;
+        background-color: #123512;
+      }
+
+      .list-group-item.active {
+        background-color: white;
+        color: #123512;
+        padding: 10px;
+      }
+
+      .list-group-item-action {
+        padding-left: 3rem;
+        font-family: "Poppins", sans-serif;
+        font-weight: bold;
+        font-size: 14px;
+        display: block;
+        color: white;
+        text-decoration: none;
+      }
+
+      .list-group-item-action.active {
+        padding-left: 3rem;
+      }
+
+      .tabcontent {
+        display: none;
+      }
+
+     select {
+        appearance: none;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #444;
+        display: inline-block;
+        margin: 0;
+        padding: 3px 6px;
+        vertical-align: middle;
+        width: 120px; /* adjust as needed */
+      }
+
+      select:focus {
+        border-color: #123512;
+        outline: none;
+      }
+
+      select option[disabled] {
+        display: none;
+      }
+
+      select option {
+        font-weight: normal;
+      }
+
+      select option:checked {
+        font-weight: bold;
+      }
+
+      .editable-cell {
+        cursor: pointer;
+        background-color: #f9f9f9;
+      }
+
+      .editable-cell {
+        position: relative;
+      }
+
+      .editable-cell.editable {
+        cursor: text;
+      }
+
+      .editable-cell.editable:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .blocked {
+  background-color: #ccc;
+  color: #888;
+}
+
+  </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="{% url 'saveTimes' %}">
+        <button
+          class="bg-transparent"
+          style="
+            font-family: 'Anton', sans-serif;
+            border-radius: 20px;
+            position: fixed;
+            border: none;
+            margin-top: 1rem;
+          "
+          id="arrow"
+        >
+          <i class="fa-solid fa-arrow-left" style="font-size: 2rem"></i>
+        </button>
+      </a>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div
+          class="d-flex align-items-center gap-2"
+          style="margin-left: 6px; margin-bottom: 2rem; margin-top: 2rem"
+        >
+          <div
+            style="
+              width: 3.9rem;
+              margin-right: 2px;
+              margin-left: 2rem;
+              margin-bottom: 3em;
+            "
+          >
+            <a href="{% url 'saveTimes' %}">
+              <img
+                src="{% static '../static/images/seal.png' %}"
+                width="100%"
+                alt=""
+              />
+            </a>
+          </div>
+          <div>
+            <h6
+              class="m-0"
+              style="
+                font-family: 'Anton', sans-serif;
+
+                font-size: 15px;
+                color: white;
+              "
+            >
+              COLLEGE OF COMPUTING STUDIES <br />
+              DTR MANAGEMENT INFORMATION SYSTEM
+            </h6>
+            <p
+              style="
+                font-family: 'Poppins', sans-serif;
+                font-weight: bold;
+                font-size: 12px;
+                color: white;
+              "
+            >
+              PREVIEW
+            </p>
+          </div>
+        </div>
+
+        <div class="list-group">
+          <a
+            onclick="openTab(event, 'link1')"
+            class="tablinks list-group-item list-group-item-action"
+            >Official Time</a
+          >
+          <a
+            onclick="openTab(event, 'link2')"
+            class="tablinks list-group-item list-group-item-action"
+            >Overload (Undergraduate)</a
+          >
+          <a
+            onclick="openTab(event, 'link3')"
+            class="tablinks list-group-item list-group-item-action"
+            >Overload (Graduate)</a
+          >
+        </div>
+      </div>
+
+      <div class="row my-5">
+        <form action="" id="div1">
+          <div id="link1" class="tabcontent grid_form_boxes">
+            <div
+              class="bg-white p-3"
+              style="
+                box-sizing: border-box;
+                width: 105mm;
+                height: 296.5mm;
+                border-style: solid;
+                border-width: 1px;
+                margin-top: 0;
+              "
+            >
+              <div
+                class="text-center d-flex align-items-center justify-content-center"
+              >
+                <h1
+                  style="
+                    margin-top: 1rem;
+                    font-family: 'Anton', sans-serif;
+                    border-style: solid;
+                    border-width: 2px;
+                    width: 20rem;
+                    color: black;
+                  "
+                >
+                  DAILY TIME RECORD
+                </h1>
+              </div>
+              <h6
+                class="text-center"
+                style="
+                  font-size: 10px;
+                  font-weight: bold;
+                  margin-top: -2rem;
+                  font-family: 'Poppins', sans-serif;
+                  color: black;
+                "
+              >
+                <!-- Official Time <br /> -->
+                {% if user.usertime.monday_morning_time_in and user.usertime.monday_afternoon_time_in %}
+                Monday {{monday_time_in_morning_ampm}} - {{monday_time_out_morning_ampm}} / {{monday_time_in_afternoon_ampm}} - {{monday_time_out_afternoon_ampm}}
+                {% elif user.usertime.monday_morning_time_in %}
+                Monday {{monday_time_in_morning_ampm}} - {{monday_time_out_morning_ampm}}
+                {% elif user.usertime.monday_afternoon_time_in %}
+                Monday {{monday_time_in_afternoon_ampm}} - {{monday_time_out_afternoon_ampm}}
+                {% endif %}
+                {% if user.usertime.monday_morning_time_in %}
+                <br>
+                {% elif user.usertime.monday_afternoon_time_in %}
+                <br>
+                {% endif %}
+                {% if user.usertime.tuesday_morning_time_in and user.usertime.tuesday_afternoon_time_in %}
+                Tuesday {{tuesday_time_in_morning_ampm}} - {{tuesday_time_out_morning_ampm}} / {{tuesday_time_in_afternoon_ampm}} - {{tuesday_time_out_afternoon_ampm}}
+                {% elif user.usertime.tuesday_morning_time_in %}
+                Tuesday {{tuesday_time_in_morning_ampm}} - {{tuesday_time_out_morning_ampm}}
+                {% elif user.usertime.tuesday_afternoon_time_in %}
+                Tuesday {{tuesday_time_in_afternoon_ampm}} - {{tuesday_time_out_afternoon_ampm}}
+                {% endif %}
+                {% if user.usertime.tuesday_morning_time_in %}
+                <br>
+                {% elif user.usertime.tuesday_afternoon_time_in %}
+                <br>
+                {% endif %}
+                {% if user.usertime.wednesday_morning_time_in and user.usertime.wednesday_afternoon_time_in %}
+                Wednesday {{wednesday_time_in_morning_ampm}} - {{wednesday_time_out_morning_ampm}} / {{wednesday_time_in_afternoon_ampm}} - {{wednesday_time_out_afternoon_ampm}}
+                {% elif user.usertime.wednesday_morning_time_in %}
+                Wednesday {{wednesday_time_in_morning_ampm}} - {{wednesday_time_out_morning_ampm}}
+                {% elif user.usertime.wednesday_afternoon_time_in %}
+                Wednesday {{wednesday_time_in_afternoon_ampm}} - {{wednesday_time_out_afternoon_ampm}}
+                {% endif %}
+                {% if user.usertime.wednesday_morning_time_in %}
+                <br>
+                {% elif user.usertime.wednesday_afternoon_time_in %}
+                <br>
+                {% endif %}
+                {% if user.usertime.thursday_morning_time_in and user.usertime.thursday_afternoon_time_in %}
+                Thursday {{thursday_time_in_morning_ampm}} - {{thursday_time_out_morning_ampm}} / {{thursday_time_in_afternoon_ampm}} - {{thursday_time_out_afternoon_ampm}}
+                {% elif user.usertime.thursday_morning_time_in %}
+                Thursday {{thursday_time_in_morning_ampm}} - {{thursday_time_out_morning_ampm}}
+                {% elif user.usertime.thursday_afternoon_time_in %}
+                Thursday {{thursday_time_in_afternoon_ampm}} - {{thursday_time_out_afternoon_ampm}}
+                {% endif %}
+                {% if user.usertime.thursday_morning_time_in %}
+                <br>
+                {% elif user.usertime.thursday_afternoon_time_in %}
+                <br>
+                {% endif %}
+                {% if user.usertime.friday_morning_time_in and user.usertime.friday_afternoon_time_in %}
+                Friday {{friday_time_in_morning_ampm}} - {{friday_time_out_morning_ampm}} / {{friday_time_in_afternoon_ampm}} - {{friday_time_out_afternoon_ampm}}
+                {% elif user.usertime.friday_morning_time_in %}
+                Friday {{friday_time_in_morning_ampm}} - {{friday_time_out_morning_ampm}}
+                {% elif user.usertime.friday_afternoon_time_in %}
+                Friday {{friday_time_in_afternoon_ampm}} - {{friday_time_out_afternoon_ampm}}
+                {% endif %}
+                {% if user.usertime.friday_morning_time_in %}
+                <br>
+                {% elif user.usertime.friday_afternoon_time_in %}
+                <br>
+                {% endif %}
+                {% if user.usertime.saturday_morning_time_in and user.usertime.saturday_afternoon_time_in %}
+                Saturday {{saturday_time_in_morning_ampm}} - {{saturday_time_out_morning_ampm}} / {{saturday_time_in_afternoon_ampm}} - {{saturday_time_out_afternoon_ampm}}
+                {% elif user.usertime.saturday_morning_time_in %}
+                Saturday {{saturday_time_in_morning_ampm}} - {{saturday_time_out_morning_ampm}}
+                {% elif user.usertime.saturday_afternoon_time_in %}
+                Saturday {{saturday_time_in_afternoon_ampm}} - {{saturday_time_out_afternoon_ampm}}
+                {% endif %}
+                {% if user.usertime.saturday_morning_time_in %}
+                <br>
+                {% elif user.usertime.saturday_afternoon_time_in %}
+                <br>
+                {% endif %}
+                {% if user.usertime.sunday_morning_time_in and user.usertime.sunday_afternoon_time_in %}
+                Sunday {{sunday_time_in_morning_ampm}} - {{sunday_time_out_morning_ampm}} / {{sunday_time_in_afternoon_ampm}} - {{sunday_time_out_afternoon_ampm}}
+                {% elif user.usertime.sunday_morning_time_in %}
+                Sunday {{sunday_time_in_morning_ampm}} - {{sunday_time_out_morning_ampm}}
+                {% elif user.usertime.sunday_afternoon_time_in %}
+                Sunday {{sunday_time_in_afternoon_ampm}} - {{sunday_time_out_afternoon_ampm}}
+                {% endif %}
+                {% if user.usertime.sunday_morning_time_in %}
+                <br>
+                {% elif user.usertime.sunday_afternoon_time_in %}
+                <br>
+                {% endif %}
+              </h6>
+
+              <div
+                class="d-flex align-items-center"
+                style="
+                  margin-left: 1rem;
+                  margin-right: 1rem;
+                  margin-top: 0.5rem;
+                "
+              >
+                <h5 style="margin-right: 1rem">
+                  NAME:
+                  <u
+                    ><span style="font-size: 12px"
+                      >{{user.first_name}} {{user.usertime.middle_initial}} {{user.last_name}}</span
+                    ></u
+                  >
+                </h5>
+                <div class="pt-3"></div>
+              </div>
+
+              <div
+                class="d-flex align-items-center"
+                style="margin-left: 1rem; margin-right: 1rem; margin-top: -5rem"
+              >
+                <h5 style="margin-right: 0.8rem">
+                  For the Month of
+                  <u><span style="font-size: 12px">{{month_name}}</span></u>
+                </h5>
+
+                <div class="pt-3"></div>
+
+                <h5 style="margin-right: 0.8rem; margin-left: 0.8rem">
+                  Year:
+                  <u><span style="font-size: 12px">{{user.usertime.year}}</span></u>
+                </h5>
+
+                <div style="width: 5rem" class="pt-3"></div>
+              </div>
+
+              <div class="d-flex align-items-center" style="margin-top: -4rem">
+                <div style="margin-top: -3rem">
+                  <h5 style="margin-left: 1rem">
+                    Official Hours for <br />
+                    Arrival & Departure
+                  </h5>
+                </div>
+
+                <div style="width: 3rem; margin-top: -3rem">
+                  <img
+                    src="{% static '../static/images/close-bracket.png' %}"
+                    width="100%"
+                    alt=""
+                  />
+                </div>
+
+                <div style="margin-right: 1rem; margin-top: -3rem">
+                  <div class="d-flex align-items-center">
+                    <h5 style="margin-right: 0.5rem">Regular days</h5>
+                    <div
+                      style="width: 18rem; border-bottom: #2c2c2c solid 1px"
+                      class="pt-3"
+                    ></div>
+                  </div>
+                  <div
+                    class="d-flex align-items-center"
+                    style="margin-top: -5.3rem"
+                  >
+                    <h5 style="margin-right: 0.5rem">Saturdays</h5>
+                    <div
+                      style="width: 20rem; border-bottom: #2c2c2c solid 1px"
+                      class="pt-3"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- official time table -->
+              <form action="">
+
+                <div
+                  class="d-flex align-items-center justify-content-center"
+                  style="margin-top: -6rem"
+                >
+               <table
+                    class="table table-responsive text-center"
+                    style="
+                      margin-left: 1rem;
+                      margin-right: 1rem;
+                      line-height: 9px;
+                      border-style: solid;
+                      border-color: black;
+                      border-top-width: thin;
+                      border-bottom-width: thin;
+                      border-left-width: thin;
+                      border-right-width: thin;
+                    "
+                  >
+                    <tr>
+                      <td
+                        class="slash fw-bold"
+                        style="width: 10px; border-right-width: thin"
+                      >
+
+                      </td>
+                      <td
+                        class="day fw-bold"
+                        style="width: 10px; border-right-width: thin; font-size: 10px;"
+                      >
+                        DAY
+                      </td>
+                      <td
+                        class="fw-bold"
+                        colspan="2"
+                        style="border-right-width: thin; font-size: 15px;"
+                      >
+                        A.M.
+                      </td>
+                      <td
+                        class="fw-bold"
+                        colspan="2"
+                        style="border-right-width: thin; font-size: 15px"
+                      >
+                        P.M.
+                      </td>
+                      <td class="fw-bold" colspan="2" style="font-size: 15px">UNDERTIME</td>
+                    </tr>
+                    <tr>
+                      <td class="blank fw-bold" style="border-right-width: thin"></td>
+                      <td class="fw-bold" style="border-right-width: thin"></td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        ARRIVAL
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        DEPARTURE
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        ARRIVAL
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        DEPARTURE
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin;"></td>
+                      <td class="fw-bold"></td>
+                      </td>
+
+                    </tr>
+                    {% if times %} {% for time in times %}
+                    <tr class="table-row editable-row">
+                      <td class="blank" style="border-right-width: thin">
+                        {{ time.0 }}
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        {{ forloop.counter }}
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        {{ time.1 }}
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        {{ time.2 }}
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        {{ time.3 }}
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin">
+                        {{ time.4 }}
+                      </td>
+                     <td class="blank fw-bold border-right">
+                        <!--<div class="dropdown d-flex justify-content-center align-items-center" style="margin-right: -2.5rem; margin-left: -2.6rem; margin-top: -.2rem; margin-bottom: -.2rem;">-->
+                        <!--  <button class="btn btn-secondary dropdown-toggle" style="width: 20%; padding-top: .5rem; padding-bottom: .5rem; display: flex; justify-content: space-between; align-items: center;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                        <!--    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+                        <!--      <a class="dropdown-item" href="#">Holiday</a>-->
+                        <!--      <a class="dropdown-item" href="#">Suspension</a>-->
+                        <!--      <a class="dropdown-item" href="#">Remarks</a>-->
+                        <!--    </div>-->
+                        <!--  </button>-->
+                        <!--</div>-->
+                      </td>
+                      <td class="fw-bold" style="border-right-width: thin"></td>
+                      <!-- <td class="fw-bold" style="border-right-width: thin"></td> -->
+                    </tr>
+                        <!-- <span class="editable-text" contenteditable="true"></span>
+                      </td> -->
+
+
+
+                      <!-- <td class="fw-bold" style="border-right-width: thin"></td> -->
+                    </tr>
+                    {% endfor %} {% endif %}
+                  </table>
+                  <!-- <div class="custom-loader"></div> -->
+                </div>
+              </form>
+                <div
+                  class="d-flex align-items-center"
+                  style="
+                    margin-left: 1rem;
+                    margin-right: 1rem;
+                    margin-top: -2rem;
+                  "
+                >
+                <h3 style="margin-right: 0.8rem;">
+                  TOTAL =
+                </h3>
+
+                  <div
+                    style="width: 31rem; border-bottom: #2c2c2c solid 1px"
+                    class="pt-3"
+                  ></div>
+                </div>
+
+                <div
+                  style="
+                    margin-left: 1rem;
+                    margin-right: 1rem;
+                    margin-top: -3rem;
+                  "
+                >
+                  <h4 style="text-align: justify">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I CERTIFY on my
+                    honor that the above is a true and correct report of the
+                    hours of work performed, record of which was made DAILY at
+                    the time of arrival and at the time of departure from
+                    office.
+                  </h4>
+                </div>
+
+                <div
+                  class="d-flex align-items-center"
+                  style="margin-top: -1rem"
+                >
+                  <div
+                    style="width: 22rem; border-bottom: #2c2c2c solid 1px"
+                    class="pt-3"
+                  ></div>
+                </div>
+
+                <div
+                  class="d-flex align-items-center"
+                  style="margin-top: -6rem"
+                >
+                  <div
+                    style="width: 38rem; border-bottom: #2c2c2c solid 1px"
+                    class="pt-3"
+                  ></div>
+                </div>
+
+                <div
+                  class="d-flex align-items-center"
+                  style="margin-top: -6.8rem"
+                >
+                  <div
+                    style="width: 38rem; border-bottom: #2c2c2c solid 1px"
+                    class="pt-3"
+                  ></div>
+                </div>
+
+                <div
+                  class="d-flex align-items-center"
+                  style="justify-content: center; margin-top: -3.5rem"
+                >
+                  <h3>Verified as the prescribed office hours</h3>
+                </div>
+
+                <div
+                class="d-flex align-items-center"
+                style="justify-content: center; margin-top: 5rem"
+                >
+                </div>
+
+                <div
+                  class="d-flex align-items-center"
+                  style="justify-content: center; margin-top: -2.6rem"
+                >
+                </div>
+
+                <div
+                  class="d-flex align-items-center"
+                  style="margin-top: -5rem"
+                >
+                  <div
+                    style="width: 22rem; border-bottom: #2c2c2c solid 1px"
+                    class="pt-3"
+                  ></div>
+                </div>
+                <div
+                  class="d-flex align-items-center"
+                  style="margin-top: -3.5rem; justify-content: center"
+                >
+                  <h3 style="margin-right: 0.8rem">In-Charge</h3>
+                </div>
+
+            </div>
+
+            <div style="position: fixed; bottom: -1rem; right: 0.5%">
+              <div class="d-flex justify-content-end gap-2">
+                <form method="post">
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    class="btn btn_hover"
+                    style="
+                      padding-top: 6px;
+                      padding-bottom: 6px;
+                      padding-left: 20px;
+                      padding-right: 20px;
+                      font-size: 14px;
+                      font-family: 'Anton', sans-serif;
+                      border-radius: 20px;
+                    "
+                    id="generateBtn"
+                    name="generateBtn"
+                    value="true"
+
+                  >
+                    Generate
+                  </button>
+                </form>
+
+                <form method="POST">
+                  {% csrf_token %}
+                    <button type="submit" class="btn btn_hover hide-in-print"
+                        style="padding-top: 6px; padding-bottom: 6px; padding-left: 20px; padding-right: 20px;
+                        font-size: 14px; font-family: 'Anton', sans-serif; border-radius: 20px;" id="saveBtn" name="saveBtn" value="true">
+                        Save
+                      </button>
+                    </form>
+
+                    <a href="#">
+                      <button type="button" class="btn btn_phover"
+                        style="padding-top: 6px; padding-bottom: 6px; padding-left: 20px; padding-right: 20px;
+                        font-size: 14px; font-family: 'Anton', sans-serif; border-radius: 20px;" id="printBtn"
+                        onclick="printDiv('div1')">Print
+                      </button>
+                </a>
+              </div>
+            </div>
+          </div>
+
+
+            <form action="" id="div2">
+                <div id="link2" class="tabcontent grid_form_boxes">
+                  <div
+                    class="bg-white p-3"
+                    style="
+                      box-sizing: border-box;
+                      width: 105mm;
+                      height: 296.5mm;
+                      border-style: solid;
+                      border-width: 1px;
+                      margin-top: 0;
+                    "
+                  >
+
+                    <h6
+                    class="text-center"
+                    style="
+                      margin-top: 2.8rem;
+                      font-size: 12px;
+                      font-weight: bold;
+                      font-family: 'Poppins', sans-serif;
+                      color: black;
+                    "
+                  >
+                    <!-- Official Time <br /> -->
+                    Overload
+                  </h6>
+                  <div
+                  class="text-center d-flex align-items-center justify-content-center"
+                >
+                <h1
+                style="
+                  margin-top: -1.7rem;
+                  font-family: 'Anton', sans-serif;
+                  border-style: solid;
+                  border-width: 2px;
+                  width: 20rem;
+                  color: black;
+                  margin-bottom: -1.4rem;
+                "
+              >
+                DAILY TIME RECORD
+              </h1>
+                  </div>
+
+
+                    <div
+                      class="d-flex align-items-center"
+                      style="
+                        margin-left: 1rem;
+                        margin-right: 1rem;
+                        margin-top: 0.5rem;
+                      "
+                    >
+                      <h5 style="margin-right: 1rem">
+                        NAME:
+                        <u
+                          ><span style="font-size: 12px"
+                            >{{user.first_name}} {{user.usertime.middle_initial}}
+                            {{user.last_name}}</span
+                          ></u
+                        >
+                      </h5>
+                      <div class="pt-3"></div>
+                    </div>
+
+                    <div
+                      class="d-flex align-items-center"
+                      style="margin-left: 1rem; margin-right: 1rem; margin-top: -5rem"
+                    >
+                      <h5 style="margin-right: 0.8rem">
+                        For the Month of
+                        <u><span style="font-size: 12px">{{month_name}}</span></u>
+                      </h5>
+
+                      <div class="pt-3"></div>
+
+                      <h5 style="margin-right: 0.8rem; margin-left: 0.8rem">
+                        Year:
+                        <u><span style="font-size: 12px">{{user.usertime.year}}</span></u>
+                      </h5>
+
+                      <div style="width: 5rem" class="pt-3"></div>
+                    </div>
+
+                    <div class="d-flex align-items-center" style="margin-top: -4rem">
+                      <div style="margin-top: -3rem">
+                        <h5 style="margin-left: 1rem">
+                          Official Hours for <br />
+                          Arrival & Departure
+                        </h5>
+                      </div>
+
+                      <div style="width: 3rem; margin-top: -3rem">
+                        <img
+                          src="{% static '../static/images/close-bracket.png' %}"
+                          width="100%"
+                          alt=""
+                        />
+                      </div>
+
+                      <div style="margin-right: 1rem; margin-top: -3rem">
+                        <div class="d-flex align-items-center">
+                          <h5 style="margin-right: 0.5rem">Regular days</h5>
+                          <div
+                            style="width: 18rem; border-bottom: #2c2c2c solid 1px"
+                            class="pt-3"
+                          ></div>
+                        </div>
+                        <div
+                          class="d-flex align-items-center"
+                          style="margin-top: -5.3rem"
+                        >
+                          <h5 style="margin-right: 0.5rem">Saturdays</h5>
+                          <div
+                            style="width: 20rem; border-bottom: #2c2c2c solid 1px"
+                            class="pt-3"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!-- official time table -->
+                    <form action="">
+
+                      <div
+                        class="d-flex align-items-center justify-content-center"
+                        style="margin-top: -6rem"
+                      >
+                     <table
+                          class="table table-responsive text-center"
+                          style="
+                            margin-left: 1rem;
+                            margin-right: 1rem;
+                            line-height: 9px;
+                            border-style: solid;
+                            border-color: black;
+                            border-top-width: thin;
+                            border-bottom-width: thin;
+                            border-left-width: thin;
+                            border-right-width: thin;
+                          "
+                        >
+                        <tr>
+                          <td
+                            class="slash fw-bold"
+                            style="width: 10px; border-right-width: thin"
+                          >
+                            /
+                          </td>
+                          <td
+                            class="day fw-bold"
+                            style="width: 10px; border-right-width: thin; font-size: 10px;"
+                          >
+                            DAY
+                          </td>
+                          <td
+                            class="fw-bold"
+                            colspan="2"
+                            style="border-right-width: thin; font-size: 15px;"
+                          >
+                            A.M.
+                          </td>
+                          <td
+                            class="fw-bold"
+                            colspan="2"
+                            style="border-right-width: thin; font-size: 15px"
+                          >
+                            P.M.
+                          </td>
+                          <td class="fw-bold" colspan="2" style="font-size: 15px">UNDERTIME</td>
+                        </tr>
+                        <tr>
+                          <td class="blank fw-bold" style="border-right-width: thin"></td>
+                          <td class="fw-bold" style="border-right-width: thin"></td>
+                          <td class="fw-bold" style="border-right-width: thin">
+                            ARRIVAL
+                          </td>
+                          <td class="fw-bold" style="border-right-width: thin">
+                            DEPARTURE
+                          </td>
+                          <td class="fw-bold" style="border-right-width: thin">
+                            ARRIVAL
+                          </td>
+                          <td class="fw-bold" style="border-right-width: thin">
+                            DEPARTURE
+                          </td>
+                          <td class="fw-bold" style="border-right-width: thin;"></td>
+                          <td class="fw-bold"></td>
+                          </td>
+
+                        </tr>
+                        {% if times %} {% for time in times %}
+                        <tr class="table-row editable-row undergrad">
+                          <td class="blank" style="border-right-width: thin">
+                            <input
+                              type="checkbox"
+                              class="highlighted row-checkbox"
+                              style="width: 80%; height: 80%"
+                              onchange="toggleRow(this)"
+                            />
+                          </td>
+                          <td class="fw-bold" style="border-right-width: thin">{{ forloop.counter }}</td>
+                          <td class="fw-bold" style="border-right-width: thin">{{ time.5 }}</td>
+                          <td class="fw-bold" style="border-right-width: thin">{{ time.6 }}</td>
+                          <td class="fw-bold" style="border-right-width: thin">{{ time.7 }}</td>
+                          <td class="fw-bold" style="border-right-width: thin">{{ time.8 }}</td>
+                          <td class="blank fw-bold border-right">
+                            <!--<div class="dropdown d-flex justify-content-center align-items-center" style="margin-right: -2.5rem; margin-left: -2.6rem; margin-top: -.2rem; margin-bottom: -.2rem;">-->
+                            <!--  <button class="btn btn-secondary dropdown-toggle" style="width: 20%; padding-top: .5rem; padding-bottom: .5rem; display: flex; justify-content: space-between; align-items: center;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                            <!--    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+                            <!--      <a class="dropdown-item" href="#">Holiday</a>-->
+                            <!--      <a class="dropdown-item" href="#">Suspension</a>-->
+                            <!--      <a class="dropdown-item" href="#">Remarks</a>-->
+                            <!--    </div>-->
+                            <!--  </button>-->
+                            <!--</div>-->
+                          </td>
+                          <td class="fw-bold" style="border-right-width: thin"></td>
+                        </tr>
+
+
+
+                            <!-- <td class="fw-bold" style="border-right-width: thin"></td> -->
+                          </tr>
+                          {% endfor %} {% endif %}
+                        </table>
+                        <!-- <div class="custom-loader"></div> -->
+                      </div>
+                    </form>
+                      <div
+                        class="d-flex align-items-center"
+                        style="
+                          margin-left: 1rem;
+                          margin-right: 1rem;
+                          margin-top: -2rem;
+                        "
+                      >
+                      <h3 style="margin-right: 0.8rem">
+                        TOTAL = <u><span style="font-size: 18px" id="total-hours-undergrad"></span><span style="font-size: 18px"> Hours</span></u>
+                      </h3>
+
+                        <div
+                          class="pt-3"
+                        ></div>
+                      </div>
+
+                      <div
+                        style="
+                          margin-left: 1rem;
+                          margin-right: 1rem;
+                          margin-top: -3rem;
+                        "
+                      >
+                        <h4 style="text-align: justify">
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I CERTIFY on my
+                          honor that the above is a true and correct report of the
+                          hours of work performed, record of which was made DAILY at
+                          the time of arrival and at the time of departure from
+                          office.
+                        </h4>
+                      </div>
+
+                      <div
+                        class="d-flex align-items-center"
+                        style="margin-top: -1rem"
+                      >
+                        <div
+                          style="width: 22rem; border-bottom: #2c2c2c solid 1px"
+                          class="pt-3"
+                        ></div>
+                      </div>
+
+                      <div
+                        class="d-flex align-items-center"
+                        style="margin-top: -6rem"
+                      >
+                        <div
+                          style="width: 38rem; border-bottom: #2c2c2c solid 1px"
+                          class="pt-3"
+                        ></div>
+                      </div>
+
+                      <div
+                        class="d-flex align-items-center"
+                        style="margin-top: -6.8rem"
+                      >
+                        <div
+                          style="width: 38rem; border-bottom: #2c2c2c solid 1px"
+                          class="pt-3"
+                        ></div>
+                      </div>
+
+                      <div
+                        class="d-flex align-items-center"
+                        style="justify-content: center; margin-top: -3.5rem"
+                      >
+                        <h3>Verified as the prescribed office hours</h3>
+                      </div>
+
+                      <div
+                      class="d-flex align-items-center"
+                      style="justify-content: center; margin-top: 5rem"
+                      >
+                      </div>
+      
+                      <div
+                        class="d-flex align-items-center"
+                        style="justify-content: center; margin-top: -2.6rem"
+                      >
+                      </div>
+
+                      <div
+                        class="d-flex align-items-center"
+                        style="margin-top: -5rem"
+                      >
+                        <div
+                          style="width: 22rem; border-bottom: #2c2c2c solid 1px"
+                          class="pt-3"
+                        ></div>
+                      </div>
+                      <div
+                        class="d-flex align-items-center"
+                        style="margin-top: -3.5rem; justify-content: center"
+                      >
+                        <h3 style="margin-right: 0.8rem">In-Charge</h3>
+                      </div>
+
+                  </div>
+
+                  <div style="position: fixed; bottom: -1rem; right: 0.5%">
+                    <div class="d-flex justify-content-end gap-2">
+                      <form method="post">
+                        {% csrf_token %}
+                        <button
+                          type="submit"
+                          class="btn btn_hover"
+                          style="
+                            padding-top: 6px;
+                            padding-bottom: 6px;
+                            padding-left: 20px;
+                            padding-right: 20px;
+                            font-size: 14px;
+                            font-family: 'Anton', sans-serif;
+                            border-radius: 20px;
+                          "
+                          id="generateBtn"
+                          name="generateBtn"
+                        >
+                          Generate
+                        </button>
+                      </form>
+
+                      <button
+                      type="button"
+                      class="btn btn_hover"
+                      style="
+                        padding-top: 6px;
+                        padding-bottom: 6px;
+                        padding-left: 20px;
+                        padding-right: 20px;
+                        font-size: 14px;
+                        font-family: 'Anton', sans-serif;
+                        border-radius: 20px;
+                      "
+                      id="editBtn"
+                      onclick="updateTotalHoursUndergrad()"
+                    >
+                      Total Hours
+                    </button>
+
+                      <a href="#">
+                        <button type="button" class="btn btn_phover"
+                          style="padding-top: 6px; padding-bottom: 6px; padding-left: 20px; padding-right: 20px;
+                          font-size: 14px; font-family: 'Anton', sans-serif; border-radius: 20px;" id="printBtn"
+                          onclick="printDiv('div2')">Print</button>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                  <!-- </form> -->
+
+
+                <form action="" id="div3">
+                    <div id="link3" class="tabcontent grid_form_boxes">
+                      <div
+                        class="bg-white p-3"
+                        style="
+                          box-sizing: border-box;
+                          width: 105mm;
+                          height: 296.5mm;
+                          border-style: solid;
+                          border-width: 1px;
+                          margin-top: 0;
+                        "
+                      >
+
+                        <h6
+                        class="text-center"
+                        style="
+                          margin-top: 2.8rem;
+                          font-size: 12px;
+                          font-weight: bold;
+                          font-family: 'Poppins', sans-serif;
+                          color: black;
+                        "
+                      >
+                        <!-- Official Time <br /> -->
+                        Overload
+                      </h6>
+                      <div
+                      class="text-center d-flex align-items-center justify-content-center"
+                        >
+                        <h1
+                        style="
+                          margin-top: -1.7rem;
+                          font-family: 'Anton', sans-serif;
+                          border-style: solid;
+                          border-width: 2px;
+                          width: 20rem;
+                          color: black;
+                          margin-bottom: -1.4rem;
+                        "
+                      >
+                    DAILY TIME RECORD
+                  </h1>
+                        </div>
+
+                        <div
+                          class="d-flex align-items-center"
+                          style="
+                            margin-left: 1rem;
+                            margin-right: 1rem;
+                            margin-top: 0.5rem;
+                          "
+                        >
+                          <h5 style="margin-right: 1rem">
+                            NAME:
+                            <u
+                              ><span style="font-size: 12px"
+                                >{{user.first_name}} {{user.usertime.middle_initial}}
+                                {{user.last_name}}</span
+                              ></u
+                            >
+                          </h5>
+                          <div class="pt-3"></div>
+                        </div>
+
+                        <div
+                          class="d-flex align-items-center"
+                          style="margin-left: 1rem; margin-right: 1rem; margin-top: -5rem"
+                        >
+                          <h5 style="margin-right: 0.8rem">
+                            For the Month of
+                            <u><span style="font-size: 12px">{{month_name}}</span></u>
+                          </h5>
+
+                          <div class="pt-3"></div>
+
+                          <h5 style="margin-right: 0.8rem; margin-left: 0.8rem">
+                            Year:
+                            <u><span style="font-size: 12px">{{user.usertime.year}}</span></u>
+                          </h5>
+
+                          <div style="width: 5rem" class="pt-3"></div>
+                        </div>
+
+                        <div class="d-flex align-items-center" style="margin-top: -4rem">
+                          <div style="margin-top: -3rem">
+                            <h5 style="margin-left: 1rem">
+                              Official Hours for <br />
+                              Arrival & Departure
+                            </h5>
+                          </div>
+
+                          <div style="width: 3rem; margin-top: -3rem">
+                            <img
+                              src="{% static '../static/images/close-bracket.png' %}"
+                              width="100%"
+                              alt=""
+                            />
+                          </div>
+
+                          <div style="margin-right: 1rem; margin-top: -3rem">
+                            <div class="d-flex align-items-center">
+                              <h5 style="margin-right: 0.5rem">Regular days</h5>
+                              <div
+                                style="width: 18rem; border-bottom: #2c2c2c solid 1px"
+                                class="pt-3"
+                              ></div>
+                            </div>
+                            <div
+                              class="d-flex align-items-center"
+                              style="margin-top: -5.3rem"
+                            >
+                              <h5 style="margin-right: 0.5rem">Saturdays</h5>
+                              <div
+                                style="width: 20rem; border-bottom: #2c2c2c solid 1px"
+                                class="pt-3"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <!-- official time table -->
+                        <form action="">
+
+                          <div
+                            class="d-flex align-items-center justify-content-center"
+                            style="margin-top: -6rem"
+                          >
+                         <table
+                              class="table table-responsive text-center"
+                              style="
+                                margin-left: 1rem;
+                                margin-right: 1rem;
+                                line-height: 9px;
+                                border-style: solid;
+                                border-color: black;
+                                border-top-width: thin;
+                                border-bottom-width: thin;
+                                border-left-width: thin;
+                                border-right-width: thin;
+                              "
+                            >
+                            <tr>
+                              <td
+                                class="slash fw-bold"
+                                style="width: 10px; border-right-width: thin"
+                              >
+                                /
+                              </td>
+                              <td
+                                class="day fw-bold"
+                                style="width: 10px; border-right-width: thin; font-size: 10px;"
+                              >
+                                DAY
+                              </td>
+                              <td
+                                class="fw-bold"
+                                colspan="2"
+                                style="border-right-width: thin; font-size: 15px;"
+                              >
+                                A.M.
+                              </td>
+                              <td
+                                class="fw-bold"
+                                colspan="2"
+                                style="border-right-width: thin; font-size: 15px"
+                              >
+                                P.M.
+                              </td>
+                              <td class="fw-bold" colspan="2" style="font-size: 15px">UNDERTIME</td>
+                            </tr>
+                            <tr>
+                              <td class="blank fw-bold" style="border-right-width: thin"></td>
+                              <td class="fw-bold" style="border-right-width: thin"></td>
+                              <td class="fw-bold" style="border-right-width: thin">
+                                ARRIVAL
+                              </td>
+                              <td class="fw-bold" style="border-right-width: thin">
+                                DEPARTURE
+                              </td>
+                              <td class="fw-bold" style="border-right-width: thin">
+                                ARRIVAL
+                              </td>
+                              <td class="fw-bold" style="border-right-width: thin">
+                                DEPARTURE
+                              </td>
+                              <td class="fw-bold" style="border-right-width: thin;"></td>
+                              <td class="fw-bold"></td>
+                              </td>
+
+                            </tr>
+                            {% if times %} {% for time in times %}
+
+                              <tr class="table-row editable-row grad">
+                                <td class="blank" style="border-right-width: thin">
+                                  <input
+                                    type="checkbox"
+                                    class="highlighted row-checkbox"
+                                    style="width: 80%; height: 80%"
+                                    onchange="toggleRow(this)"
+                                  />
+                                </td>
+                                <td class="fw-bold" style="border-right-width: thin">{{ forloop.counter }}</td>
+                                <td class="fw-bold" style="border-right-width: thin">{{ time.9 }}</td>
+                                <td class="fw-bold" style="border-right-width: thin">{{ time.10 }}</td>
+                                <td class="fw-bold" style="border-right-width: thin">{{ time.11 }}</td>
+                                <td class="fw-bold" style="border-right-width: thin">{{ time.12 }}</td>
+                              <td class="blank fw-bold border-right">
+                                <!--<div class="dropdown d-flex justify-content-center align-items-center" style="margin-right: -2.5rem; margin-left: -2.6rem; margin-top: -.2rem; margin-bottom: -.2rem;">-->
+                                <!--  <button class="btn btn-secondary dropdown-toggle" style="width: 20%; padding-top: .5rem; padding-bottom: .5rem; display: flex; justify-content: space-between; align-items: center;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                                <!--    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+                                <!--      <a class="dropdown-item" href="#">Holiday</a>-->
+                                <!--      <a class="dropdown-item" href="#">Suspension</a>-->
+                                <!--      <a class="dropdown-item" href="#">Remarks</a>-->
+                                <!--    </div>-->
+                                <!--  </button>-->
+                                <!--</div>-->
+                              </td>
+                              <td class="fw-bold" style="border-right-width: thin"></td>
+                            </tr>
+
+
+                                <!-- <td class="fw-bold" style="border-right-width: thin"></td> -->
+                              </tr>
+                              {% endfor %} {% endif %}
+                            </table>
+                            <!-- <div class="custom-loader"></div> -->
+                          </div>
+                        </form>
+                          <div
+                            class="d-flex align-items-center"
+                            style="
+                              margin-left: 1rem;
+                              margin-right: 1rem;
+                              margin-top: -2rem;
+                            "
+                          >
+                          <h3 style="margin-right: 0.8rem">
+                            TOTAL = <u><span style="font-size: 18px" id="total-hours-grad"></span><span style="font-size: 18px"> Hours</span></u>
+                          </h3>
+
+                            <div
+                              class="pt-3"
+                            ></div>
+                          </div>
+
+                          <div
+                            style="
+                              margin-left: 1rem;
+                              margin-right: 1rem;
+                              margin-top: -3rem;
+                            "
+                          >
+                            <h4 style="text-align: justify">
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I CERTIFY on my
+                              honor that the above is a true and correct report of the
+                              hours of work performed, record of which was made DAILY at
+                              the time of arrival and at the time of departure from
+                              office.
+                            </h4>
+                          </div>
+
+                          <div
+                            class="d-flex align-items-center"
+                            style="margin-top: -1rem"
+                          >
+                            <div
+                              style="width: 22rem; border-bottom: #2c2c2c solid 1px"
+                              class="pt-3"
+                            ></div>
+                          </div>
+
+                          <div
+                            class="d-flex align-items-center"
+                            style="margin-top: -6rem"
+                          >
+                            <div
+                              style="width: 38rem; border-bottom: #2c2c2c solid 1px"
+                              class="pt-3"
+                            ></div>
+                          </div>
+
+                          <div
+                            class="d-flex align-items-center"
+                            style="margin-top: -6.8rem"
+                          >
+                            <div
+                              style="width: 38rem; border-bottom: #2c2c2c solid 1px"
+                              class="pt-3"
+                            ></div>
+                          </div>
+
+                          <div
+                            class="d-flex align-items-center"
+                            style="justify-content: center; margin-top: -3.5rem"
+                          >
+                            <h3>Verified as the prescribed office hours</h3>
+                          </div>
+
+                          <div
+                          class="d-flex align-items-center"
+                          style="justify-content: center; margin-top: 5rem"
+                          >
+                          </div>
+          
+                          <div
+                            class="d-flex align-items-center"
+                            style="justify-content: center; margin-top: -2.6rem"
+                          >
+                          </div>
+
+                          <div
+                            class="d-flex align-items-center"
+                            style="margin-top: -5rem"
+                          >
+                            <div
+                              style="width: 22rem; border-bottom: #2c2c2c solid 1px"
+                              class="pt-3"
+                            ></div>
+                          </div>
+                          <div
+                            class="d-flex align-items-center"
+                            style="margin-top: -3.5rem; justify-content: center"
+                          >
+                            <h3 style="margin-right: 0.8rem">In-Charge</h3>
+                          </div>
+
+                      </div>
+
+                      <div style="position: fixed; bottom: -1rem; right: 0.5%">
+                        <div class="d-flex justify-content-end gap-2">
+                          <form method="post">
+                            {% csrf_token %}
+                            <button
+                              type="submit"
+                              class="btn btn_hover"
+                              style="
+                                padding-top: 6px;
+                                padding-bottom: 6px;
+                                padding-left: 20px;
+                                padding-right: 20px;
+                                font-size: 14px;
+                                font-family: 'Anton', sans-serif;
+                                border-radius: 20px;
+                              "
+                              id="generateBtn"
+                              name="generateBtn"
+                            >
+                              Generate
+                            </button>
+                          </form>
+
+                          <button
+                          type="button"
+                          class="btn btn_hover"
+                          style="
+                            padding-top: 6px;
+                            padding-bottom: 6px;
+                            padding-left: 20px;
+                            padding-right: 20px;
+                            font-size: 14px;
+                            font-family: 'Anton', sans-serif;
+                            border-radius: 20px;
+                          "
+                          id="editBtn"
+                          onclick="updateTotalHoursGrad()"
+                        >
+                          Total Hours
+                        </button>
+
+                          <a href="#">
+                            <button type="button" class="btn btn_phover"
+                              style="padding-top: 6px; padding-bottom: 6px; padding-left: 20px; padding-right: 20px;
+                              font-size: 14px; font-family: 'Anton', sans-serif; border-radius: 20px;" id="printBtn"
+                              onclick="printDiv('div3')">Print</button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+      </div>
+    </div>
+
+    <script>
+      // function toggleRow(checkbox) {
+      //   var row = checkbox.parentNode.parentNode;
+      //   if (checkbox.checked) {
+      //     row.classList.add('blocked');
+      //   } else {
+      //     row.classList.remove('blocked');
+      //   }
+      // }
+
+      //checkbox block
+      function toggleRow(checkbox) {
+  var row = checkbox.parentNode.parentNode;
+  var cells = row.querySelectorAll('td');
+  if (checkbox.checked) {
+    // Store the original text content of each editable cell
+    cells.forEach((cell, index) => {
+      if (index > 1 && !cell.classList.contains('row-checkbox') && !cell.classList.contains('blank')) {
+        cell.setAttribute('contenteditable', true);
+        cell.setAttribute('data-original-text', cell.textContent);
+        cell.textContent = '';
+      }
+    });
+    // Merge the time cells
+    // cells[2].setAttribute('colspan', 4);
+    // for (var i = 3; i < 6; i++) {
+    //   cells[i].style.display = 'none';
+    // }
+    // row.classList.add('blocked');
+  } else {
+    // Retrieve and restore the original text content of each editable cell
+    cells.forEach((cell, index) => {
+      if (index > 1 && !cell.classList.contains('row-checkbox') && !cell.classList.contains('blank')) {
+        cell.setAttribute('contenteditable', false);
+        var originalText = cell.getAttribute('data-original-text');
+        if (originalText) {
+          cell.textContent = originalText;
+          cell.removeAttribute('data-original-text');
+        }
+      }
+    });
+    // Unmerge the time cells
+    cells[2].setAttribute('colspan', 1);
+    for (var i = 3; i < 6; i++) {
+      cells[i].style.display = '';
+    }
+    // row.classList.remove('blocked');
+  }
+}
+
+      //dropdown
+      var dropdownLinks = document.querySelectorAll('.dropdown-item');
+      dropdownLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          var cellIndexStart, cellIndexEnd;
+          if (link.textContent === 'Holiday') {
+            cellIndexStart = 2;
+            cellIndexEnd = 5;
+          } else if (link.textContent === 'Suspension') {
+            var mergeOption = prompt('Enter 1 to merge cells 1-2, or 2 to merge cells 3-4:');
+            if (mergeOption === '1') {
+              cellIndexStart = 2;
+              cellIndexEnd = 3;
+            } else {
+              cellIndexStart = 4;
+              cellIndexEnd = 5;
+            }
+          } else if (link.textContent === 'Remarks') {
+            cellIndexStart = 2;
+            cellIndexEnd = 5;
+          }
+          // Get the row and cells
+          var row = link.closest('tr');
+          var cells = row.querySelectorAll('td');
+          // Clear the cell
+          cells[cellIndexStart].textContent = '';
+          // Merge the cells
+          cells[cellIndexStart].setAttribute('colspan', cellIndexEnd - cellIndexStart + 1);
+          for (var i = cellIndexStart + 1; i <= cellIndexEnd; i++) {
+            cells[i].style.display = 'none';
+          }
+          // Add the label for "Holiday"
+          if (link.textContent === 'Holiday') {
+            var labelCell = cells[cellIndexStart];
+            var labelNode = document.createTextNode('Holiday');
+            labelCell.appendChild(labelNode);
+          }
+          // Add the label for "Suspension"
+          if (link.textContent === 'Suspension') {
+            var labelCell = cells[cellIndexStart];
+            var labelNode = document.createTextNode('Class suspended');
+            labelCell.appendChild(labelNode);
+          }
+          // Add the label for "Remarks"
+          if (link.textContent === 'Remarks') {
+            var labelCell = cells[cellIndexStart];
+            var italicNode = document.createElement('i');
+            italicNode.textContent = 'Add remarks';
+            labelCell.appendChild(italicNode);
+          }
+        });
+      });
+
+
+
+      //sidebar
+      function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+
+      // Show the default tab
+      document.getElementById("link1").style.display = "block";
+      document.getElementsByClassName("tablinks")[0].className += " active";
+
+
+      //printing
+      function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+      }
+
+      // edit rows
+      let cells = document.querySelectorAll('.editable-row td');
+      cells.forEach(cell => {
+        cell.addEventListener('click', () => {
+          if (cell.classList.contains('blank')) {
+            return; // skip cells with class "row-checkbox"
+          }
+
+          // Make the cell editable
+          cell.setAttribute('contenteditable', true);
+          cell.classList.add('editable-cell');
+
+          // Add event listener to update time when user exits cell
+          cell.addEventListener('blur', () => {
+            // Get the new time value and update the cell textContent
+            let time = cell.textContent.trim();
+            cell.textContent = time;
+          });
+        });
+      });
+
+      //editable cell
+      let editableCells = document.querySelectorAll('.editable-cell');
+
+      editableCells.forEach(cell => {
+        cell.addEventListener('click', () => {
+          cell.classList.add('editable');
+
+          let editableText = cell.querySelector('.editable-text');
+          editableText.focus();
+
+          editableText.addEventListener('blur', () => {
+            cell.classList.remove('editable');
+
+            let newText = editableText.innerText;
+            // Do something with the new text
+          });
+        });
+      });
+
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="{% static '../static/bootstrap-5.1.3-dist/js/bootstrap.min.js' %}"></script>
+
+    <script>
+      function printDiv(divId) {
+        var printContents = document.getElementById(divId).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+      }
+      // function to calculate hours from time inputs
+      function convertTo24HourFormat(time) {
+        if (!time) return null;
+
+        const timeParts = time.split(" ");
+        if (timeParts.length !== 2) return null; // Invalid time format, return null
+
+        const [timeValue, amPm] = timeParts;
+
+        const [hours, minutes] = timeValue.split(":");
+        const parsedHours = parseInt(hours);
+        const parsedMinutes = parseInt(minutes);
+
+        if (isNaN(parsedHours) || isNaN(parsedMinutes)) return null; // Invalid time format, return null
+
+        if (amPm === "PM" && parsedHours !== 12) {
+          return `${parsedHours + 12}:${minutes.padStart(2, "0")}`;
+        } else if (amPm === "AM" && parsedHours === 12) {
+          return `00:${minutes.padStart(2, "0")}`;
+        } else {
+          return `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;
+        }
+      }
+
+
+      function calculateHours(row) {
+        var timeInMorning = convertTo24HourFormat(row.cells[2].textContent.trim());
+        var timeOutMorning = convertTo24HourFormat(row.cells[3].textContent.trim());
+        var timeInAfternoon = convertTo24HourFormat(row.cells[4].textContent.trim());
+        var timeOutAfternoon = convertTo24HourFormat(row.cells[5].textContent.trim());
+
+
+        // convert times to minutes
+        var timeInMorningMins = timeInMorning ? parseInt(timeInMorning.split(":")[0]) * 60 + parseInt(timeInMorning.split(":")[1]) : 0;
+        var timeOutMorningMins = timeOutMorning ? parseInt(timeOutMorning.split(":")[0]) * 60 + parseInt(timeOutMorning.split(":")[1]) : 0;
+        var timeInAfternoonMins = timeInAfternoon ? parseInt(timeInAfternoon.split(":")[0]) * 60 + parseInt(timeInAfternoon.split(":")[1]) : 0;
+        var timeOutAfternoonMins = timeOutAfternoon ? parseInt(timeOutAfternoon.split(":")[0]) * 60 + parseInt(timeOutAfternoon.split(":")[1]) : 0;
+
+        // calculate total hours
+        var totalMins = timeOutMorningMins - timeInMorningMins + timeOutAfternoonMins - timeInAfternoonMins;
+        var totalHours = totalMins / 60;
+        return totalHours;
+      }
+
+      // calculate total hours for table undergrad
+      function calculateTotalHoursUndergrad() {
+        var totalHours = 0;
+        var rows = document.getElementsByClassName("editable-row undergrad");
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          var hours = calculateHours(row);
+          totalHours += hours;
+        }
+        return totalHours;
+      }
+
+      // calculate total hours for table grad
+      function calculateTotalHoursGrad() {
+        var totalHours = 0;
+        var rows = document.getElementsByClassName("editable-row grad");
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          var hours = calculateHours(row);
+          totalHours += hours;
+        }
+        return totalHours;
+      }
+
+      // update undergrad total hours display
+      function updateTotalHoursUndergrad() {
+        var totalHours = calculateTotalHoursUndergrad();
+        var totalHoursDisplay = document.getElementById("total-hours-undergrad");
+        totalHoursDisplay.textContent = totalHours.toFixed(0);
+      }
+
+      // update grad total hours display
+      function updateTotalHoursGrad() {
+        var totalHours = calculateTotalHoursGrad();
+        var totalHoursDisplay = document.getElementById("total-hours-grad");
+        totalHoursDisplay.textContent = totalHours.toFixed(0);
+      }
+
+      // add event listeners to table cells
+      var cells = document.getElementById("generateBtn");
+      for (var i = 0; i < cells.length; i++) {
+        var cell = cells[i];
+        cell.addEventListener("click", function() {
+          updateTotalHoursUndergrad();
+        });
+      }
+      updateTotalHoursUndergrad()
+
+      // add event listeners to table cells
+      var cells = document.getElementById("generateBtn");
+      for (var i = 0; i < cells.length; i++) {
+        var cell = cells[i];
+        cell.addEventListener("click", function() {
+          updateTotalHoursGrad();
+        });
+      }
+      updateTotalHoursGrad()
+    </script>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.extra_tags == 'archive' %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        <script>
+          // Wait 5 seconds, then remove any messages
+          setTimeout(function() {
+            var messages = document.querySelector('.messages');
+            if (messages) {
+                messages.remove();
+            }
+          }, 1500);
+          </script>
+          <style>
+            .messages {
+                position: fixed;
+                top: 38%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                padding: 10px;
+                background-color: #00c026;
+                color: #fff;
+                font-size: 12.5px;
+                font-weight: bold;
+                text-align: center;
+                border-radius: 5px;
+                list-style-type: none;
+            }
+          </style>
+          {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+  </body>
+</html>

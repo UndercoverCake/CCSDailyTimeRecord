@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'bootstrap-5.1.3-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+    <link rel="shortcut icon" href="{% static 'images/seal.png' %}" type="image/x-icon">
+    
+    <title>My Profile</title>
+
+    <style>
+      html {
+        --scrollbarBG: #e9e9e9;
+        --thumbBG: #123512;
+      }
+
+      body {
+        background-color: #e9e9e9;
+        min-height: 100vh;
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+      }
+
+      body::-webkit-scrollbar {
+        height: 11px;
+        width: 11px;
+      }
+
+      body::-webkit-scrollbar-track {
+        background: var(--scrollbarBG);
+      }
+
+      body::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG);
+        border-radius: 6px;
+        border: 3px solid var(--scrollbarBG);
+      }
+
+      * {
+        font-family: "Be_Vietnam_Pro", sans-serif;
+      }
+
+      .grid_form_name {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4rem;
+      }
+
+      .grid_form_date {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4rem;
+      }
+
+      .grid_form_boxes div {
+        margin: 2rem auto;
+      }
+
+      .btn_hover {
+        background-color: #123512;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn_hover:hover {
+        background: white;
+        color: #123512;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      .btn_closeevent {
+        background-color: #2c2c2c;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn_closeevent:hover {
+        background: white;
+        color: #123512;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      .btn_shover {
+        background-color: #123512;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn_shover:hover {
+        background: white;
+        color: #123512;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      .btn_rhover {
+        background: white;
+        color: #b50505;
+        border-width: 1.5px;
+        border-color: #b50505;
+      }
+
+      .btn_rhover:hover {
+        background: white;
+        color: #565656;
+        border-width: 1.5px;
+        border-color: #565656;
+        transition: all 0.5s ease;
+      }
+
+      .btn_phover {
+        background: white;
+        color: #123512;
+        border-color: #123512;
+      }
+
+      .btn_phover:hover {
+        background: white;
+        color: #565656;
+        border-width: 1.5px;
+        border-color: #565656;
+        transition: all 0.5s ease;
+      }
+
+      .closemod {
+        position: absolute;
+        margin-top: 8px;
+        margin-bottom: 10px;
+        padding-left: 9px;
+        padding-right: 9px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        right: 14px;
+        font-size: 18px;
+        font-weight:bold;
+        text-decoration: none;
+        color: #000;
+        border-radius: 10px;
+        border-style: none;
+      }
+
+      #profile-pic {
+        height: 150px;
+        width: 150px; /* Set a fixed width to prevent overflow */
+        border-radius: 50%;
+        margin-bottom: 10px;
+        border-style: solid;
+        border-color: #123512;
+        object-fit: cover;
+        object-position: center; /* Center the image if it's rectangular */
+      }
+
+      /* Style the tab buttons */
+      .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: white;
+        padding: 1rem;
+        margin-top: 2rem;
+        border-width: 1px;
+        border-style: solid;
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        border-radius: 5px;
+      }
+
+      /* Set the tab buttons to display as blocks on small screens */
+      @media screen and (max-width: 600px) {
+        .tab button {
+          display: block;
+          width: 100%;
+          margin-bottom: 5px;
+        }
+      }
+
+      /* Set the tab buttons to display inline on larger screens */
+      @media screen and (min-width: 601px) {
+        .tab button {
+          display: inline-block;
+          width: 33%;
+          margin-bottom: 5px;
+        }
+      }
+
+      /* Style the tab content */
+      .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        background-color: white;
+        border-radius: 5px;
+      }
+
+      .tablinks {
+        align-items: center;
+        padding: 6px 12px;
+        width: 33%;
+        border-color: #9e9e9e;
+        border-width: 1px;
+        border-radius: 5px;
+        color: #123512;
+        font-weight: bold;
+      }
+
+      .tablinks.active {
+        background-color: #123512;
+        color: white;
+      }
+
+      .tablinks_hover:hover {
+        align-items: center;
+        padding: 6px 12px;
+        /* width: 33%; */
+        border-width: 1px;
+        border-radius: 5px;
+        background: #fefefe;
+        border-color: #123512;
+        color: #2c2c2c;
+        transition: all 0.5s ease;
+      }
+
+      .filter select {
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path d="M6 8L10 12L14 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.2rem;
+        bottom: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <div
+                style="
+                  width: 2.7rem;
+                  margin-bottom: 2.5rem;
+                  margin-right: 0.4rem;
+                "
+              >
+                <a href="{% url 'home' %}">
+                  <img
+                    src="{% static '../static/images/seal.png' %}"
+                    width="100%"
+                    alt=""
+                  />
+                </a>
+              </div>
+              <div>
+                <h6
+                  class="m-0"
+                  style="
+                    font-family: 'Anton', sans-serif;
+                    font-weight: bold;
+                    font-size: 18px;
+                    color: #123512;
+                  "
+                >
+                  COLLEGE OF COMPUTING STUDIES <br />
+                  DTR MANAGEMENT INFORMATION SYSTEM
+                </h6>
+                <p
+                  style="
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: bold;
+                    font-size: 14px;
+                    color: #123512;
+                  "
+                >
+                  MY PROFILE
+                </p>
+              </div>
+            </div>
+
+            <a
+              href="{% url 'logout' %}"
+              class="text-decoration-none d-flex align-items-center text-dark"
+            >
+              <h6
+                class="mx-2"
+                style="
+                  font-weight: bold;
+                  font-family: 'Poppins', sans-serif;
+                  text-decoration: none;
+                "
+              >
+                Logout
+              </h6>
+              <div style="width: 20px; margin-top: -0.5rem">
+                <img
+                  width="100%"
+                  src="{% static '../static/images/logout.png' %}"
+                />
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 4rem; text-align: center">
+        <form method="POST" id="myForm" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <input
+            type="file"
+            id="photo-input"
+            name="photo-input"
+            accept="image/*"
+            style="display: none"
+            onchange="previewImage(event)"
+          />
+          <img
+            id="profile-pic"
+            {% if data.image %}
+            src="{{ data.image.url }}"
+            {% else %}
+            src="{% static '../static/images/4.jpg' %}"
+            {% endif %}
+            style="
+              height: 150px;
+              border-radius: 50%;
+              margin-bottom: 10px;
+              border-style: solid;
+              border-color: #123512;
+              object-fit: cover;
+            "
+          />
+          <label
+            for="photo-input"
+            class="label d-flex align-items-center justify-content-center mx-auto text-center"
+            style="
+              font-family: 'Poppins', sans-serif;
+              cursor: pointer;
+              /* text-decoration: underline;
+                font-style: italic; */
+              font-weight: bold;
+              font-size: 12px;
+            "
+          >
+            Change Photo
+
+          </label>
+
+        
+        <br />
+        <rectangle
+          id="editable"
+          style="
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            background-color: rgb(18, 53, 18);
+            color: white;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 18px;
+            padding-right: 18px;
+            border-radius: 159px;
+          "
+        >
+          {{ data.first_name }} {{data.middle_initial}} {{ data.last_name }}
+        </rectangle>
+      </div>
+
+      <div class="text-center mt-3">
+        <a
+          href="{% url 'change-password' user.id %}"
+          style="font-size: 13px; font-style: italic; color: black; margin-right: 20px;"
+          >Change Password</a
+        >
+
+        <a
+        href="{% url 'my-reports' user.id %}"
+        style="font-size: 13px; font-style: italic; color: black"
+        >View DTR Reports</a
+        >
+      </div>
+
+      <div class="row my-5">
+        <!-- form names -->
+        <div class="grid_form_name">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              name="firstName"
+              id="firstName"
+              value="{{ data.first_name }}"
+              placeholder="First Name"
+            />
+          </div>
+
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              name="middleInitial"
+              id="middleInitial"
+              value="{{ data.middle_initial }}"
+              placeholder="Middle Initial"
+            />
+          </div>
+
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              name="lastName"
+              id="lastName"
+              placeholder="Last Name"
+              value="{{ data.last_name }}"
+            />
+          </div>
+        </div>
+
+        <!-- form dates -->
+        <div class="grid_form_date mt-4">
+          <div>
+            <label for="month">Month</label>
+            <div class="filter">
+              <select class="form-control" id="month" name="month" value="{{data.month}}">
+                <option value="" disabled>Select a month</option>
+                <option value="1" {% if data.month == 1 %}selected{% endif %}>January</option>
+                <option value="2" {% if data.month == 2 %}selected{% endif %}>February</option>
+                <option value="3" {% if data.month == 3 %}selected{% endif %}>March</option>
+                <option value="4" {% if data.month == 4 %}selected{% endif %}>April</option>
+                <option value="5" {% if data.month == 5 %}selected{% endif %}>May</option>
+                <option value="6" {% if data.month == 6 %}selected{% endif %}>June</option>
+                <option value="7" {% if data.month == 7 %}selected{% endif %}>July</option>
+                <option value="8" {% if data.month == 8 %}selected{% endif %}>August</option>
+                <option value="9" {% if data.month == 9 %}selected{% endif %}>September</option>
+                <option value="10" {% if data.month == 10 %}selected{% endif %}>October</option>
+                <option value="11" {% if data.month == 11 %}selected{% endif %}>November</option>
+                <option value="12" {% if data.month == 12 %}selected{% endif %}>December</option>
+              </select>
+            </div> 
+          </div>
+          
+          <div>
+            <label for="Year">Year</label>
+            <div class="filter">
+              <input 
+                          type="number" 
+                          name="year" 
+                          id="year" 
+                          class="form-control" 
+                          placeholder="Year"
+                          value="{{data.year}}"
+                          minlength="4"
+                          maxlength="4"
+                          min="1000"
+                          max="9999"
+                          pattern="[1-9][0-9]?"
+                          oninput="if (this.value > 9999) this.value = 9999; if (this.value == 0) this.value = null; if (this.value < 0) this.value = null;"
+                          required
+                          />
+
+            </div> 
+          </div>
+
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <a>
+            <button
+            type="button"
+            class="btn btn_shover save-button"
+            style="padding-left: 20px; padding-right: 20px; font-size: 14px; font-family: 'Anton', sans-serif; border-radius: 20px;"
+          >
+            Save
+          </button>
+          </a>
+        </div>
+
+        <!-- tab navigation -->
+        <div class="tab">
+          <button
+            type="button"
+            class="tablinks tablinks_hover"
+            onclick="openTab(event, 'tab1')"
+          >
+            Official Time
+          </button>
+          <button
+            type="button"
+            class="tablinks tablinks_hover"
+            onclick="openTab(event, 'tab2')"
+          >
+            Overload (Undergraduate)
+          </button>
+          <button
+            type="button"
+            class="tablinks tablinks_hover"
+            onclick="openTab(event, 'tab3')"
+          >
+            Overload (Graduate)
+          </button>
+        </div>
+
+        <!-- form dates -->
+        <!-- <div class="grid_form_boxes mt-4">
+            <div class="bg-white rounded-3 p-3" style="box-sizing: border-box"> -->
+
+
+        <div id="tab1" class="tabcontent text-center">
+          <h3
+            style="
+              font-family: 'Anton', sans-serif;
+              color: #123512;
+              margin-top: 2rem;
+              height: 4%;
+            "
+          >
+            OFFICIAL TIME
+          </h3>
+
+          <p style="font-size: 14px; color: #123512">
+            7:50 - 8:00 / 12:00 - 12:10
+          </p>
+
+          <!-- official time table -->
+          <div class="table-responsive">
+            <table id="myTable" class="table text-center">
+              <thead>
+                <th>Day</th>
+                <th colspan="2">AM</th>
+                <th colspan="2">PM</th>
+              </thead>
+              <tr>
+                <td></td>
+                <td class="fw-bold">Arrival</td>
+                <td class="fw-bold">Departure</td>
+                <td class="fw-bold">Arrival</td>
+                <td class="fw-bold">Departure</td>
+              </tr>
+              <tr>
+                <tr>
+                  <td class="fw-bold">Monday</td>
+                  <td><input type="time" class="form-control" name="monday_time_in_morning" id="monday_time_in_morning" value="{{data.monday_morning_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="monday_time_out_morning" id="monday_time_out_morning" value="{{data.monday_morning_time_out}}" ></td>
+                  <td><input type="time" class="form-control" name="monday_time_in_afternoon" id="monday_time_in_afternoon" value="{{data.monday_afternoon_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="monday_time_out_afternoon" id="monday_time_out_afternoon" value="{{data.monday_afternoon_time_out}}" ></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Tuesday</td>
+                  <td><input type="time" class="form-control" name="tuesday_time_in_morning" id="tuesday_time_in_morning" value="{{data.tuesday_morning_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="tuesday_time_out_morning" id="tuesday_time_out_morning" value="{{data.tuesday_morning_time_out}}" ></td>
+                  <td><input type="time" class="form-control" name="tuesday_time_in_afternoon" id="tuesday_time_in_afternoon" value="{{data.tuesday_afternoon_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="tuesday_time_out_afternoon" id="tuesday_time_out_afternoon" value="{{data.tuesday_afternoon_time_out}}" ></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Wednesday</td>
+                  <td><input type="time" class="form-control" name="wednesday_time_in_morning" id="wednesday_time_in_morning" value="{{data.wednesday_morning_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="wednesday_time_out_morning" id="wednesday_time_out_morning" value="{{data.wednesday_morning_time_out}}" ></td>
+                  <td><input type="time" class="form-control" name="wednesday_time_in_afternoon" id="wednesday_time_in_afternoon" value="{{data.wednesday_afternoon_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="wednesday_time_out_afternoon" id="wednesday_time_out_afternoon" value="{{data.wednesday_afternoon_time_out}}" ></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Thursday</td>
+                  <td><input type="time" class="form-control" name="thursday_time_in_morning" id="thursday_time_in_morning" value="{{data.thursday_morning_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="thursday_time_out_morning" id="thursday_time_out_morning" value="{{data.thursday_morning_time_out}}" ></td>
+                  <td><input type="time" class="form-control" name="thursday_time_in_afternoon" id="thursday_time_in_afternoon" value="{{data.thursday_afternoon_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="thursday_time_out_afternoon" id="thursday_time_out_afternoon" value="{{data.thursday_afternoon_time_out}}" ></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Friday</td>
+                  <td><input type="time" class="form-control" name="friday_time_in_morning" id="friday_time_in_morning" value="{{data.friday_morning_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="friday_time_out_morning" id="friday_time_out_morning" value="{{data.friday_morning_time_out}}" ></td>
+                  <td><input type="time" class="form-control" name="friday_time_in_afternoon" id="friday_time_in_afternoon" value="{{data.friday_afternoon_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="friday_time_out_afternoon" id="friday_time_out_afternoon" value="{{data.friday_afternoon_time_out}}" ></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Saturday</td>
+                  <td><input type="time" class="form-control" name="saturday_time_in_morning" id="saturday_time_in_morning" value="{{data.saturday_morning_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="saturday_time_out_morning" id="saturday_time_out_morning" value="{{data.saturday_morning_time_out}}" ></td>
+                  <td><input type="time" class="form-control" name="saturday_time_in_afternoon" id="saturday_time_in_afternoon" value="{{data.saturday_afternoon_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="saturday_time_out_afternoon" id="saturday_time_out_afternoon" value="{{data.saturday_afternoon_time_out}}" ></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Sunday</td>
+                  <td><input type="time" class="form-control" name="sunday_time_in_morning" id="sunday_time_in_morning" value="{{data.sunday_morning_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="sunday_time_out_morning" id="sunday_time_out_morning" value="{{data.sunday_morning_time_out}}" ></td>
+                  <td><input type="time" class="form-control" name="sunday_time_in_afternoon" id="sunday_time_in_afternoon" value="{{data.sunday_afternoon_time_in}}" ></td>
+                  <td><input type="time" class="form-control" name="sunday_time_out_afternoon" id="sunday_time_out_afternoon" value="{{data.sunday_afternoon_time_out}}" ></td>
+                </tr>
+              </table>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center px-1">
+            <a>
+              <button
+                type="button"
+                onclick="resetTable()"
+                class="btn btn_rhover reset-button"
+                data-tab="1"
+                style="
+                  padding-left: 20px;
+                  padding-right: 20px;
+                  font-size: 14px;
+                  font-family: 'Anton', sans-serif;
+                  border-radius: 20px;
+                "
+              >
+                Reset
+              </button>
+            </a>
+
+            <div
+              class="d-flex align-items-center justify-content-end gap-2 px-1 mt-4 mb-4"
+            >
+
+            <a href="{% url 'holiday' %}" target="_blank">
+            <button
+            type="button"
+            class="btn btn_shover"
+            style="
+              padding-left: 20px;
+              padding-right: 20px;
+              font-size: 14px;
+              font-family: 'Anton', sans-serif;
+              border-radius: 20px;
+            "
+            data-toggle="modal"
+            data-target="#addHolidaysModal"
+          >
+            Add Event
+          </button>
+        </a>
+
+        <a href="{% url 'make-up' %}" target="_blank">
+          <button
+          type="button"
+          class="btn btn_shover"
+          style="
+            padding-left: 20px;
+            padding-right: 20px;
+            font-size: 14px;
+            font-family: 'Anton', sans-serif;
+            border-radius: 20px;
+          "
+          data-toggle="modal"
+          data-target="#addHolidaysModal"
+        >
+          Add Make-Up Class
+        </button>
+      </a>
+
+      <a>
+        <button
+        type="button"
+        class="btn btn_shover save-button"
+        style="padding-left: 20px; padding-right: 20px; font-size: 14px; font-family: 'Anton', sans-serif; border-radius: 20px;"
+      >
+        Save
+      </button>
+      </a>
+
+              <a href="{% url 'preview' %}">
+                <div
+                  class="btn btn_phover"
+                  style="
+                    padding-left: 20px;
+                    padding-right: 20px;
+                    font-size: 14px;
+                    font-family: 'Anton', sans-serif;
+                    border-radius: 20px;
+                    border-width: 1px;
+                    border-style: solid;
+                  "
+                >
+                  Preview
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- </div>
+          </div> -->
+
+        <div id="tab2" class="tabcontent text-center">
+          <h3
+            style="
+              font-family: 'Anton', sans-serif;
+              color: #123512;
+              margin-top: 2rem;
+              margin-bottom: 1rem;
+            "
+          >
+            OVERLOAD (UNDERGRADUATE)
+          </h3>
+
+          <div class="table-responsive">
+            <table id="myTable" class="table text-center">
+              <thead>
+                <th>Day</th>
+                <th colspan="2">AM</th>
+                <th colspan="2">PM</th>
+              </thead>
+              <tr>
+                <td></td>
+                <td class="fw-bold">Arrival</td>
+                <td class="fw-bold">Departure</td>
+                <td class="fw-bold">Arrival</td>
+                <td class="fw-bold">Departure</td>
+              </tr>
+
+              <tr>
+                <td class="fw-bold">Monday</td>
+                <td><input type="time" class="form-control" name="monday_time_in_morning_overload_undergrad" id="monday_time_in_morning_overload_undergrad" value="{{data.monday_time_in_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="monday_time_out_morning_overload_undergrad" id="monday_time_out_morning_overload_undergrad" value="{{data.monday_time_out_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="monday_time_in_afternoon_overload_undergrad" id="monday_time_in_afternoon_overload_undergrad" value="{{data.monday_time_in_afternoon_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="monday_time_out_afternoon_overload_undergrad" id="monday_time_out_afternoon_overload_undergrad" value="{{data.monday_time_out_afternoon_overload_undergrad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Tuesday</td>
+                <td><input type="time" class="form-control" name="tuesday_time_in_morning_overload_undergrad" id="tuesday_time_in_morning_overload_undergrad" value="{{data.tuesday_time_in_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="tuesday_time_out_morning_overload_undergrad" id="tuesday_time_out_morning_overload_undergrad" value="{{data.tuesday_time_out_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="tuesday_time_in_afternoon_overload_undergrad" id="tuesday_time_in_afternoon_overload_undergrad" value="{{data.tuesday_time_in_afternoon_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="tuesday_time_out_afternoon_overload_undergrad" id="tuesday_time_out_afternoon_overload_undergrad" value="{{data.tuesday_time_out_afternoon_overload_undergrad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Wednesday</td>
+                <td><input type="time" class="form-control" name="wednesday_time_in_morning_overload_undergrad" id="wednesday_time_in_morning_overload_undergrad" value="{{data.wednesday_time_in_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="wednesday_time_out_morning_overload_undergrad" id="wednesday_time_out_morning_overload_undergrad" value="{{data.wednesday_time_out_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="wednesday_time_in_afternoon_overload_undergrad" id="wednesday_time_in_afternoon_overload_undergrad" value="{{data.wednesday_time_in_afternoon_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="wednesday_time_out_afternoon_overload_undergrad" id="wednesday_time_out_afternoon_overload_undergrad" value="{{data.wednesday_time_out_afternoon_overload_undergrad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Thursday</td>
+                <td><input type="time" class="form-control" name="thursday_time_in_morning_overload_undergrad" id="thursday_time_in_morning_overload_undergrad" value="{{data.thursday_time_in_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="thursday_time_out_morning_overload_undergrad" id="thursday_time_out_morning_overload_undergrad" value="{{data.thursday_time_out_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="thursday_time_in_afternoon_overload_undergrad" id="thursday_time_in_afternoon_overload_undergrad" value="{{data.thursday_time_in_afternoon_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="thursday_time_out_afternoon_overload_undergrad" id="thursday_time_out_afternoon_overload_undergrad" value="{{data.thursday_time_out_afternoon_overload_undergrad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Friday</td>
+                <td><input type="time" class="form-control" name="friday_time_in_morning_overload_undergrad" id="friday_time_in_morning_overload_undergrad" value="{{data.friday_time_in_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="friday_time_out_morning_overload_undergrad" id="friday_time_out_morning_overload_undergrad" value="{{data.friday_time_out_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="friday_time_in_afternoon_overload_undergrad" id="friday_time_in_afternoon_overload_undergrad" value="{{data.friday_time_in_afternoon_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="friday_time_out_afternoon_overload_undergrad" id="friday_time_out_afternoon_overload_undergrad" value="{{data.friday_time_out_afternoon_overload_undergrad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Saturday</td>
+                <td><input type="time" class="form-control" name="saturday_time_in_morning_overload_undergrad" id="saturday_time_in_morning_overload_undergrad" value="{{data.saturday_time_in_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="saturday_time_out_morning_overload_undergrad" id="saturday_time_out_morning_overload_undergrad" value="{{data.saturday_time_out_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="saturday_time_in_afternoon_overload_undergrad" id="saturday_time_in_afternoon_overload_undergrad" value="{{data.saturday_time_in_afternoon_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="saturday_time_out_afternoon_overload_undergrad" id="saturday_time_out_afternoon_overload_undergrad" value="{{data.saturday_time_out_afternoon_overload_undergrad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Sunday</td>
+                <td><input type="time" class="form-control" name="sunday_time_in_morning_overload_undergrad" id="sunday_time_in_morning_overload_undergrad" value="{{data.sunday_time_in_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="sunday_time_out_morning_overload_undergrad" id="sunday_time_out_morning_overload_undergrad" value="{{data.sunday_time_out_morning_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="sunday_time_in_afternoon_overload_undergrad" id="sunday_time_in_afternoon_overload_undergrad" value="{{data.sunday_time_in_afternoon_overload_undergrad}}" ></td>
+                <td><input type="time" class="form-control" name="sunday_time_out_afternoon_overload_undergrad" id="sunday_time_out_afternoon_overload_undergrad" value="{{data.sunday_time_out_afternoon_overload_undergrad}}" ></td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center px-1">
+            <a>
+              <button
+                type="button"
+                onclick="resetTable()"
+                class="btn btn_rhover reset-button"
+                data-tab="2"
+                style="
+                  padding-left: 20px;
+                  padding-right: 20px;
+                  font-size: 14px;
+                  font-family: 'Anton', sans-serif;
+                  border-radius: 20px;
+                "
+              >
+                Reset
+              </button>
+            </a>
+
+            <div
+              class="d-flex align-items-center justify-content-end gap-2 px-1 mt-4 mb-4"
+            >
+            <a>
+              <button
+              type="button"
+              class="btn btn_shover save-button"
+              style="padding-left: 20px; padding-right: 20px; font-size: 14px; font-family: 'Anton', sans-serif; border-radius: 20px;"
+            >
+              Save
+            </button>
+            </a>
+
+              <a href="{% url 'preview' %}">
+                <div
+                  class="btn btn_phover"
+                  style="
+                    padding-left: 20px;
+                    padding-right: 20px;
+                    font-size: 14px;
+                    font-family: 'Anton', sans-serif;
+                    border-radius: 20px;
+                    border-width: 1px;
+                    border-style: solid;
+                  "
+                >
+                  Preview
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab3" class="tabcontent text-center">
+          <h3
+            style="
+              font-family: 'Anton', sans-serif;
+              color: #123512;
+              margin-top: 2rem;
+              margin-bottom: 1rem;
+            "
+          >
+            OVERLOAD (GRADUATE)
+          </h3>
+
+          <div class="table-responsive">
+            <table id="myTable" class="table text-center">
+              <thead>
+                <th>Day</th>
+                <th colspan="2">AM</th>
+                <th colspan="2">PM</th>
+              </thead>
+              <tr>
+                <td></td>
+                <td class="fw-bold">Arrival</td>
+                <td class="fw-bold">Departure</td>
+                <td class="fw-bold">Arrival</td>
+                <td class="fw-bold">Departure</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Monday</td>
+                <td><input type="time" class="form-control" name="monday_time_in_morning_overload_grad" id="monday_time_in_morning_overload_grad" value="{{data.monday_time_in_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="monday_time_out_morning_overload_grad" id="monday_time_out_morning_overload_grad" value="{{data.monday_time_out_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="monday_time_in_afternoon_overload_grad" id="monday_time_in_afternoon_overload_grad" value="{{data.monday_time_in_afternoon_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="monday_time_out_afternoon_overload_grad" id="monday_time_out_afternoon_overload_grad" value="{{data.monday_time_out_afternoon_overload_grad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Tuesday</td>
+                <td><input type="time" class="form-control" name="tuesday_time_in_morning_overload_grad" id="tuesday_time_in_morning_overload_grad" value="{{data.tuesday_time_in_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="tuesday_time_out_morning_overload_grad" id="tuesday_time_out_morning_overload_grad" value="{{data.tuesday_time_out_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="tuesday_time_in_afternoon_overload_grad" id="tuesday_time_in_afternoon_overload_grad" value="{{data.tuesday_time_in_afternoon_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="tuesday_time_out_afternoon_overload_grad" id="tuesday_time_out_afternoon_overload_grad" value="{{data.tuesday_time_out_afternoon_overload_grad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Wednesday</td>
+                <td><input type="time" class="form-control" name="wednesday_time_in_morning_overload_grad" id="wednesday_time_in_morning_overload_grad" value="{{data.wednesday_time_in_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="wednesday_time_out_morning_overload_grad" id="wednesday_time_out_morning_overload_grad" value="{{data.wednesday_time_out_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="wednesday_time_in_afternoon_overload_grad" id="wednesday_time_in_afternoon_overload_grad" value="{{data.wednesday_time_in_afternoon_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="wednesday_time_out_afternoon_overload_grad" id="wednesday_time_out_afternoon_overload_grad" value="{{data.wednesday_time_out_afternoon_overload_grad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Thursday</td>
+                <td><input type="time" class="form-control" name="thursday_time_in_morning_overload_grad" id="thursday_time_in_morning_overload_grad" value="{{data.thursday_time_in_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="thursday_time_out_morning_overload_grad" id="thursday_time_out_morning_overload_grad" value="{{data.thursday_time_out_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="thursday_time_in_afternoon_overload_grad" id="thursday_time_in_afternoon_overload_grad" value="{{data.thursday_time_in_afternoon_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="thursday_time_out_afternoon_overload_grad" id="thursday_time_out_afternoon_overload_grad" value="{{data.thursday_time_out_afternoon_overload_grad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Friday</td>
+                <td><input type="time" class="form-control" name="friday_time_in_morning_overload_grad" id="friday_time_in_morning_overload_grad" value="{{data.friday_time_in_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="friday_time_out_morning_overload_grad" id="friday_time_out_morning_overload_grad" value="{{data.friday_time_out_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="friday_time_in_afternoon_overload_grad" id="friday_time_in_afternoon_overload_grad" value="{{data.friday_time_in_afternoon_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="friday_time_out_afternoon_overload_grad" id="friday_time_out_afternoon_overload_grad" value="{{data.friday_time_out_afternoon_overload_grad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Saturday</td>
+                <td><input type="time" class="form-control" name="saturday_time_in_morning_overload_grad" id="saturday_time_in_morning_overload_grad" value="{{data.saturday_time_in_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="saturday_time_out_morning_overload_grad" id="saturday_time_out_morning_overload_grad" value="{{data.saturday_time_out_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="saturday_time_in_afternoon_overload_grad" id="saturday_time_in_afternoon_overload_grad" value="{{data.saturday_time_in_afternoon_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="saturday_time_out_afternoon_overload_grad" id="saturday_time_out_afternoon_overload_grad" value="{{data.saturday_time_out_afternoon_overload_grad}}" ></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Sunday</td>
+                <td><input type="time" class="form-control" name="sunday_time_in_morning_overload_grad" id="sunday_time_in_morning_overload_grad" value="{{data.sunday_time_in_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="sunday_time_out_morning_overload_grad" id="sunday_time_out_morning_overload_grad" value="{{data.sunday_time_out_morning_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="sunday_time_in_afternoon_overload_grad" id="sunday_time_in_afternoon_overload_grad" value="{{data.sunday_time_in_afternoon_overload_grad}}" ></td>
+                <td><input type="time" class="form-control" name="sunday_time_out_afternoon_overload_grad" id="sunday_time_out_afternoon_overload_grad" value="{{data.sunday_time_out_afternoon_overload_grad}}" ></td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center px-1">
+            <a>
+              <button
+                type="button"
+                onclick="resetTable()"
+                class="btn btn_rhover reset-button"
+                data-tab="3"
+                style="
+                  padding-left: 20px;
+                  padding-right: 20px;
+                  font-size: 14px;
+                  font-family: 'Anton', sans-serif;
+                  border-radius: 20px;
+                "
+              >
+                Reset
+              </button>
+            </a>
+
+
+            <div
+              class="d-flex align-items-center justify-content-end gap-2 px-1 mt-4 mb-4"
+            >
+            <a>
+              <button
+              type="button"
+              class="btn btn_shover save-button"
+              style="padding-left: 20px; padding-right: 20px; font-size: 14px; font-family: 'Anton', sans-serif; border-radius: 20px;"
+            >
+              Save
+            </button>
+            </a>
+
+            </form>
+              <a href="{% url 'preview' %}">
+                <div
+                  class="btn btn_phover"
+                  style="
+                    padding-left: 20px;
+                    padding-right: 20px;
+                    font-size: 14px;
+                    font-family: 'Anton', sans-serif;
+                    border-radius: 20px;
+                    border-width: 1px;
+                    border-style: solid;
+                  "
+                >
+                  Preview
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.all.min.js"></script>
+    
+    <script>
+    //sweet alert-save
+    const saveButtons = document.querySelectorAll('.save-button');
+
+    saveButtons.forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+
+    const form = document.getElementById('myForm');
+    const formData = new FormData(form);
+
+    // Disable the button to prevent multiple form submissions
+    button.disabled = true;
+
+    Swal.fire({
+      title: 'Are you sure you want to save this data?',
+      text: 'Please check before submitting.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        confirmButton: 'swal-button swal-button--confirm',
+        cancelButton: 'swal-button swal-button--cancel',
+      },
+      confirmButtonColor: '#123512',
+      cancelButtonColor: '#b5b0b0',
+      iconColor: '#123512',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Submit the form using Fetch API
+        fetch(form.action, {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              Swal.fire({
+                title: 'Success!',
+                text: 'Data has been successfully saved.',
+                icon: 'success',
+                customClass: {
+                  confirmButton: 'swal-button swal-button--confirm',
+                },
+                confirmButtonColor: '#123512',
+              });
+            } else {
+              Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while saving data.',
+                icon: 'error',
+                customClass: {
+                  confirmButton: 'swal-button swal-button--confirm',
+                },
+                confirmButtonColor: '#123512',
+              });
+            }
+
+            // Re-enable the button after form submission (whether success or error)
+            button.disabled = false;
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'An error occurred during form submission.',
+              icon: 'error',
+              customClass: {
+                confirmButton: 'swal-button swal-button--confirm',
+              },
+              confirmButtonColor: '#123512',
+            });
+
+            // Re-enable the button after form submission (error)
+            button.disabled = false;
+          });
+      } else {
+        // Enable the button again if the user cancels the Swal dialog
+        button.disabled = false;
+      }
+    });
+  });
+});
+
+
+    //sweet alert-reset
+    const resetButtons = document.querySelectorAll(".reset-button");
+
+    resetButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        // Show the confirmation dialog for reset
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Are you sure you want to reset the data?",
+          icon: "error",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "Cancel",
+          customClass: {
+            confirmButton: "swal-button swal-button--confirm",
+            cancelButton: "swal-button swal-button--cancel",
+          },
+          confirmButtonColor: "#a32d1d",
+          cancelButtonColor: "#b5b0b0",
+          iconColor: "#a32d1d",
+          }).then((result) => {
+          if (result.isConfirmed) {
+            const tabNumber = this.getAttribute("data-tab");
+
+            const inputs = document.querySelectorAll(
+              `#tab${tabNumber} input[type="time"]`
+            );
+
+            inputs.forEach(function (input) {
+              input.value = "";
+            });
+
+            Swal.fire({
+              title: "Success!",
+              text: "Data has been successfully reset.",
+              icon: "success",
+              customClass: {
+            confirmButton: "swal-button swal-button--confirm",
+          },
+          confirmButtonColor: "#123512",
+        });
+      }
+    });
+  });
+});
+
+      function previewImage(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            document
+              .getElementById("profile-pic")
+              .setAttribute("src", e.target.result);
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+
+      // Show the default tab
+      document.getElementById("tab1").style.display = "block";
+      document.getElementsByClassName("tablinks")[0].className += " active";
+
+
+      document.getElementById('remarks').addEventListener('change', function() {
+        var morningDiv = document.getElementById('morningSuspension');
+        var afternoonDiv = document.getElementById('afternoonSuspension');
+        
+        if (this.value === 'Suspension') {
+          morningDiv.style.display = 'block';
+          afternoonDiv.style.display = 'block';
+        } else {
+          morningDiv.style.display = 'none';
+          afternoonDiv.style.display = 'none';
+        }
+      });
+    </script>
+
+<!-- <style>
+  .messages {
+      position: fixed;
+      top: 38%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      padding: 10px;
+      background-color: #c00000;
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 5px;
+      list-style-type: none;
+  }
+</style> -->
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.extra_tags == 'adminError' %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        <script>
+          // Wait 5 seconds, then remove any messages
+          setTimeout(function() {
+            var messages = document.querySelector('.messages');
+            if (messages) {
+                messages.remove();
+            }
+          }, 1500);
+          </script>
+        {% elif message.extra_tags == 'timeError' %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        <script>
+          setTimeout(function() {
+            var messages = document.querySelector('.messages');
+            if (messages) {
+                messages.remove();
+            }
+          }, 5000);
+          </script>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+
+  </body>
+</html>

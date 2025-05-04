@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{% static '../static/bootstrap-5.1.3-dist/css/bootstrap.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="../static/fontawesome-free-6.3.0-web/css/all.min.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="{% static '../static/images/seal.png' %}"
+      type="image/x-icon"
+    />
+    <title>Admin Panel</title>
+    <a href="/static/images/bg.jpg"></a>
+    <style>
+      html {
+        --scrollbarBG: #e9e9e9;
+        --thumbBG: #123512;
+      }
+
+      body {
+        background-color:#e9e9e9;
+        min-height: 100vh;
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+      }
+
+      body::-webkit-scrollbar {
+        height: 11px;
+        width: 11px;
+      }
+      
+      body::-webkit-scrollbar-track {
+        background: var(--scrollbarBG);
+      }
+
+      body::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+        border: 3px solid var(--scrollbarBG);
+      }
+
+      * {
+        font-family: "Be_Vietnam_Pro", sans-serif;
+      }
+
+      @media print {
+      .print-container {
+        display: block;      
+      }
+
+      body {
+        margin: 0;
+      }
+    }
+
+     .btn_phover {
+        background-color: #123512;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn_phover:hover {
+        background: #ffffff;
+        color: #2c2c2c;
+        border-width: 1.5px;
+        border-color: #123512; 
+        transition: all 0.5s ease;
+      }
+
+      .print-btn {
+        position: fixed;
+        bottom: 20px;
+        left: 89%;
+        transform: translateX(-50%);
+        }
+
+      /* Button styles */
+      button {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 14px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        
+      }
+
+      .btn_hover {
+        background-color: red;
+        color: white;
+      }
+
+      .toggle-btn {
+        background-color: red;
+        color: white;
+      }
+      /* .btn_hover.active {
+        background-color: #123512;
+        color: white;
+        transition: all 0.5s ease;
+      } */
+
+      .btn_closeevent {
+        background-color: #2c2c2c;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn_closeevent:hover {
+        background: white;
+        color: #123512;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      .btn_shover {
+        background-color: #123512;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn_shover:hover {
+        background: #ffffff;
+        color: #2c2c2c;
+        border-width: 1.5px;
+        border-color: #123512; 
+        transition: all 0.5s ease;
+      }
+
+      .btn_rhover {
+        background: #e9e9e9;
+        color: #123512;
+        border-width: 1.5px;
+        border-color: #123512;
+      }
+
+      .btn_rhover:hover {
+        background: #fefefe;
+        color: #2c2c2c;
+        border-width: 1.5px;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      .btn_addhover {
+        background-color: #123512;
+        color: white;
+        cursor: pointer;
+      }
+
+      .btn_addhover:hover {
+        background: white;
+        color: #123512;
+        border-width: 1.5px;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+      
+      .btn_eventhover {
+        background: #e9e9e9;
+        color: #123512;
+        border-width: 1.5px;
+        border-color: #123512;
+      }
+
+      .btn_eventhover:hover {
+        background: #fefefe;
+        color: #2c2c2c;
+        border-width: 1.5px;
+        border-color: #123512;
+        transition: all 0.5s ease;
+      }
+
+      .btn-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 3px;
+      }
+
+      .btn_addhover:hover .btn-icon {
+        content: url("../static/images/add-acc-b.png");
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+        display: none;
+      }
+
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 2;
+        display: none;
+        padding: 3rem;
+      }
+
+      .popup h2 {
+        margin-top: 0;
+      }
+
+      .popup form label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 16px;
+        padding: 5px;
+        border: none;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        font-weight: bold;
+        margin-right: 185px;
+      }
+
+      .popup form input {
+        width: 100%;
+        display: block;
+        padding: 5px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+
+      .popup form button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #123512;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .popup form button:hover {
+        background: #e9e9e9;
+        color: #2c2c2c;
+        transition: all 0.5s ease;
+      }
+
+      .close {
+        position: absolute;
+        top: 6px;
+        right: 14px;
+        font-size: 30px;
+        text-decoration: none;
+        color: #000;
+      }
+
+      .close:hover {
+        color: #555;
+      }
+
+      .closemod {
+        position: absolute;
+        margin-top: 8px;
+        margin-bottom: 10px;
+        padding-left: 9px;
+        padding-right: 9px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        right: 14px;
+        font-size: 18px;
+        font-weight:bold;
+        text-decoration: none;
+        border-radius: 10px;
+        color: #000;
+      }
+
+      .show {
+        display: block;
+      }
+
+      .input::placeholder {
+        color: #999;
+        font-style: italic;
+        font-size: 12px;
+      }
+      .indicator {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-left: 5px;
+      }
+
+      .active {
+        background-color: green;
+      }
+
+      .deactivated {
+        background-color: red;
+      }
+
+      /* Style the search box */
+      #search-box {
+        width: 260px;
+        height: 33px;
+        border: none;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 16px;
+        transition: box-shadow 0.3s ease-in-out;
+      }
+
+      #search-box:focus {
+        outline: none;
+        /* box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3); */
+      }
+      
+      /* Hide elements that don't match the search query */
+      .list-item:not([data-search*="#search-box"]) {
+        display: none;
+      }
+
+      .filter {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+      }
+
+      .category{
+        height: 33px;
+        padding: 6px 10px;
+        border: none;
+        border-radius: 10px;
+      }
+
+      .filter select {
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path d="M6 8L10 12L14 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.2rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <div style="width: 2.7rem; margin-bottom: 2.5rem; margin-right: .4rem;">
+                <a href="{% url 'home' %}">
+                  <img
+                    src="{% static '../static/images/seal.png' %}"
+                    width="100%"
+                    alt=""
+                  />
+                </a>
+              </div>
+              <div>
+                <h6
+                class="m-0"
+                style="
+                  font-family: 'Anton', sans-serif;
+                  font-weight: bold;
+                  font-size: 18px;
+                  color: #123512;
+                      "
+                    >
+                    COLLEGE OF COMPUTING STUDIES <br />
+                    DTR MANAGEMENT INFORMATION SYSTEM
+                </h6>
+                <p
+                    style="
+                    font-family: 'Poppins', sans-serif;
+                    font-weight: bold;
+                    font-size: 14px;
+                    color: #123512;
+                  "
+                >
+                    ADMIN PANEL
+                </p>
+              </div>
+            </div>
+            <a
+              href="{% url 'logout' %}"
+              class="text-decoration-none d-flex align-items-center text-dark"
+            >
+              <h6
+                class="mx-2"
+                style="
+                  font-weight: bold;
+                  font-family: 'Poppins', sans-serif;
+                  text-decoration: none;
+                "
+              >
+                Logout
+              </h6>
+              <div style="width: 20px; margin-top: -0.5rem">
+                <img
+                  width="100%"
+                  src="{% static '../static/images/logout.png' %}"
+                />
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-center">
+        <button
+          class="btn btn_addhover"
+          id="addAccountBtn"
+          style="
+            padding-left: 15px;
+            padding-right: 15px;
+            font-size: 20px;
+            font-family: 'Anton', sans-serif;
+            border-radius: 20px;
+            margin-right: .3rem
+          "
+        >
+          <img
+            src="{% static '../static/images/add-acc-w.png' %}"
+            alt="Account Image"
+            class="btn-icon"
+          />
+          Add Account
+        </button>
+
+
+        <a href="{% url 'holiday' %}">
+          <button
+          type="button"
+          class="btn btn_eventhover"
+          style="
+              padding-left: 15px;
+              padding-right: 15px;
+              font-size: 14px;
+              font-family: 'Anton', sans-serif;
+              border-radius: 20px;
+            "
+          >
+            Add Event
+          </button>
+          </a>
+      
+      </div>
+
+      <div class="overlay" id="overlay"></div>
+
+      <div class="popup" id="popup">
+        <h2
+          style="
+            margin-bottom: 2rem;
+            font-family: 'Anton', sans-serif;
+            color: #123512;
+            text-align: center;
+          "
+        >
+          Add an Account
+        </h2>
+        <form method="post">
+          {% csrf_token %}
+          <label class="label">Employee ID</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your Employee ID"
+            required
+            class="form-input"
+          />
+
+          <label class="label">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            placeholder="Enter your first name"
+            required
+            class="form-input"
+          />
+
+          <label class="label">Middle Initial</label>
+          <input
+            type="text"
+            id="middleInitial"
+            name="middleInitial"
+            placeholder="Enter your middle initial"
+            required
+            class="form-input"
+          />
+
+          <label class="label">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            placeholder="Enter your last name"
+            required
+            class="form-input"
+          />
+
+          <button type="submit">Add Account</button>
+        </form>
+        
+        <a class="close" href="" id="closeBtn">&times;</a>
+      </div>
+
+      <div class="mt-3" id="printableArea">
+        <div class="rounded-3 p-2 pb-1 mb-3" style="box-sizing: border-box; background-color: #123512">
+          <div class="text-align: left" style="margin-left: 4px">
+            <h1 style="font-family: 'Anton', sans-serif; color: white; font-size: 20px;">Employees</h1>
+          </div>
+        </div>
+
+<!--         
+        <div class="d-flex justify-content-start gap-2">
+          <div class="d-flex justify-content-between w-100">
+            <div class="filter">
+              <select class="category">
+                <option value="" disabled selected>Category</option>
+                <option value="Active">Active Accounts</option>
+                <option value="Inactive">Inactive Accounts</option>
+              </select>
+            </div>            
+          </div> -->
+
+        <!-- search input -->
+        <form method="POST" action="{% url 'searchBar' %}">
+          {% csrf_token %}
+          <div class="d-flex justify-content-between gap-2">
+            <div class="d-flex align-items-center position-relative">
+              <i class="fa-solid fa-magnifying-glass position-absolute" style="font-size: 1rem; top: 35%; right: 10px; transform: translateY(-50%);"></i>
+              <input class="mb-3" name="search" type="text" id="search-box" placeholder="Search...">
+            </div>
+          
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn_shover" style="
+                margin-bottom: 1rem;
+                padding-top: 6px;
+                padding-bottom: 6px;
+                padding-left: 20px;
+                padding-right: 20px;
+                font-size: 14px;
+                font-family: 'Anton', sans-serif;
+                border-radius: 20px;
+              ">
+                Search
+              </button>
+          
+              <a href="{% url 'adminpanel' %}">
+                <button type="button" class="btn btn_rhover" style="
+                  margin-bottom: 1rem;
+                  padding-top: 6px;
+                  padding-bottom: 6px;
+                  padding-left: 20px;
+                  padding-right: 20px;
+                  font-size: 14px;
+                  font-family: 'Anton', sans-serif;
+                  border-radius: 20px;
+                ">
+                  Reset
+                </button>
+              </a>
+            </div>
+          </div>          
+        </form>
+        </div> 
+      
+
+        <div class="bg-white rounded-3 p-3 mb-4" style="box-sizing: border-box;">
+          <div class="table-responsive">
+            <div class="d-flex align-items-center mx-2 pb-1">
+              <table class="table">
+                
+                <tr>
+                  <th style="text-align: center; width: 90px">Profile</th>
+                  <th style="width: 280px">Name</th>
+                  <th style="text-align: center">Employee ID</th>
+                  <th style="text-align: center; width: 170px">Reports</th>
+                  <th style="text-align: center; width: 180px">Actions</th>
+                  <th style="text-align: center;"></th>
+                  <th style="text-align: center; width: 120px">Status</th>
+                </tr>
+
+                {% if search %}
+                {% if employees %}
+                  {% for employee in employees %}
+                    <tr>
+                      <!--profiles-->
+                      <td class="justify-content-center" style="width: 60px">
+                        <div style="width: 30px; margin: auto">
+                          {% if employee.usertime__image %}
+                          <img width="100%" style="border-radius: 50%" src="{{ employee.usertime.image.url }}" />
+                        {% else %}
+                          <img width="100%" style="border-radius: 50%" src="../static/images/blank-photo.png" />
+                        {% endif %}
+                        </div>
+                      </td>
+
+                      <!--names-->
+                      <td>{{ employee.first_name }} {{employee.usertime__middle_initial}} {{ employee.last_name }}</td>
+
+                      <!--employee ID-->
+                      <td style="text-align: center">{{ employee.username }}</td>
+
+                      
+                      <!--reports-->
+                      <td style="text-align: center;"><a href="{% url 'my-reports' employee.id %}" style="color: black">View</a></td>
+
+
+                      <!--actions-->
+                      <td style="text-align: center; font-size: 14px">
+                        {% if employee.is_active %}
+                        <a href="{% url 'deactivate-user' employee.id %}"><button class="button btn_hover fw-bold toggle-btn" style="background-color: red;">
+                        Deactivate
+                        </button></a>
+                        {% else %}
+                        <a href="{% url 'activate-user' employee.id %}"><button class="button btn_hover fw-bold toggle-btn" style="background-color: green;">
+                        Activate
+                        </button></a>
+                        {% endif %}
+                      </td>      
+
+                      <td>
+                        <i class="fa-solid fa-trash" style="margin-left: -1rem; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal{{ employee.id }}"></i> 
+                      </td> 
+                      
+                      <!--status-->
+                      <td style="text-align: center; font-size: 14px">
+                        {% if employee.is_active %}
+                        <span class="status fw-bold">Active</span>
+                        <span class="indicator active"></span>
+                      {% else %}
+                        <span class="status fw-bold">Deactivated</span>
+                        <span class="indicator deactivated"></span>
+                      {% endif %}
+                      </td>
+                    
+                  {% empty %}
+                    <tr>
+                      <td colspan="4">No results found.</td>
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="4">No results found.</td>
+                  </tr>
+                {% endif %}
+              {% else %}
+              {% for employee in users %}
+              {% if not employee.is_superuser %}
+                <tr>
+                  <!--profiles-->
+                  <td class="justify-content-center" style="width: 60px">
+                    <div style="width: 30px; margin: auto">
+                      {% if employee.usertime.image %}
+                      <img width="100%" style="border-radius: 50%" src="{{ employee.usertime.image.url }}" />
+                      {% else %}
+                      <img width="100%" style="border-radius: 50%" src="../static/images/blank-photo.png" />
+                      {% endif %}
+                    </div>
+                  </td>
+
+                  <!--names-->
+                  <td>{{ employee.first_name }} {{employee.usertime.middle_initial}} {{ employee.last_name }}</td>
+
+                  <!--employee ID-->
+                  <td style="text-align: center">{{employee.username}}</td>
+
+                  <!--Reports-->
+                  <td style="text-align: center;"><a href="{% url 'my-reports' employee.id %}" style="color: black">View</a></td>
+
+                  <!--actions-->
+                  <td style="text-align: center; font-size: 14px">
+                    {% if employee.is_active %}
+                    <a href="{% url 'deactivate-user' employee.id %}"><button class="button btn_hover fw-bold toggle-btn" style="background-color: red;">
+                    Deactivate
+                    </button></a>
+                    {% else %}
+                    <a href="{% url 'activate-user' employee.id %}"><button class="button btn_hover fw-bold toggle-btn" style="background-color: green;">
+                    Activate
+                    </button></a>
+                    {% endif %}   
+                  </td>
+
+                  <td>
+                    <i class="fa-solid fa-trash" style="margin-left: -1rem; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal{{ employee.id }}"></i> 
+                  </td>
+
+                  <!--status-->
+                  <td style="text-align: center; font-size: 14px">
+                  {% if employee.is_active %}
+                    <span class="status fw-bold">Active</span>
+                    <span class="indicator active"></span>
+                  {% else %}
+                    <span class="status fw-bold">Deactivated</span>
+                    <span class="indicator deactivated"></span>
+                  {% endif %}
+                  </td>
+                </tr>
+                <!-- Confirmation modal for deleting user -->
+                <div class="modal fade" id="deleteConfirmationModal{{ employee.id }}" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel{{ employee.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteConfirmationModalLabel{{ employee.id }}">Delete Confirmation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to delete this user?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <a href="{% url 'delete-user' employee.id %}"><button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+              {% endfor %}
+              
+              {% endif %}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{% static '../static/bootstrap-5.1.3-dist/js/bootstrap.min.js' %}"></script>
+    <script>
+        function printDiv(divName) {
+          var printContents = document.getElementById(divName).innerHTML;
+          var originalContents = document.body.innerHTML;
+                
+          document.body.innerHTML = printContents;
+  
+          window.print();
+  
+          document.body.innerHTML = originalContents;
+        }
+        
+          // Set initial state of buttons
+      const addAccountBtn = document.getElementById("addAccountBtn");
+      const overlay = document.getElementById("overlay");
+      const popup = document.getElementById("popup");
+      const closeBtn = document.getElementById("closeBtn");
+
+      addAccountBtn.addEventListener("click", () => {
+        overlay.classList.add("show");
+        popup.classList.add("show");
+      });
+
+      closeBtn.addEventListener("click", () => {
+        overlay.classList.remove("show");
+        popup.classList.remove("show");
+      });
+
+      // Get the search box element
+      var searchBox = document.getElementById("search-box");
+
+      // Listen for the input event
+      searchBox.addEventListener("input", function () {
+        // Get the search query
+        var query = searchBox.value.toLowerCase();
+
+        // Get all the list items
+        var listItems = document.querySelectorAll(".list-item");
+
+        // Loop through the list items
+        listItems.forEach(function (item) {
+          // Get the item's search keywords
+          var keywords = item.getAttribute("data-search").toLowerCase();
+
+          // Check if the keywords match the query
+          if (keywords.indexOf(query) !== -1) {
+            // Show the item
+            item.style.display = "block";
+          } else {
+            // Hide the item
+            item.style.display = "none";
+          }
+        });
+      });
+
+
+      // get year and month select elements
+    const yearSelect = document.querySelector('.year-select');
+    const monthSelect = document.querySelector('.month-select');
+
+    // add event listeners to year and month select elements
+    yearSelect.addEventListener('change', filterResults);
+    monthSelect.addEventListener('change', filterResults);
+
+    function filterResults() {
+      // get selected year and month
+      const selectedYear = yearSelect.value;
+      const selectedMonth = monthSelect.value;
+
+      // get all search results
+      const searchResults = document.querySelectorAll('.search-results .search-result');
+
+      // loop through search results and show/hide based on selected year and month
+      searchResults.forEach(result => {
+        const resultYear = result.getAttribute('data-year');
+        const resultMonth = result.getAttribute('data-month');
+
+        if (
+          (selectedYear === '' || selectedYear === resultYear) &&
+          (selectedMonth === '' || selectedMonth === resultMonth)
+        ) {
+          result.style.display = 'block';
+        } else {
+          result.style.display = 'none';
+        }
+      });
+    }
+
+
+    // This assumes you have a variable named `user` that contains the user object
+    var statusSpan = document.querySelector('.status');
+    var indicatorSpan = document.querySelector('.indicator');
+
+    if (user.is_active) {
+      statusSpan.textContent = 'Active';
+      indicatorSpan.classList.add('active');
+    } else {
+      statusSpan.textContent = 'Deactivated';
+      indicatorSpan.classList.add('deactivated');
+    }
+    </script>
+  </body>
+
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+          {% if message.extra_tags == 'eventSuccess' %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+          <script>
+            // Wait 5 seconds, then remove any messages
+            setTimeout(function() {
+              var messages = document.querySelector('.messages');
+              if (messages) {
+                  messages.remove();
+              }
+            }, 1500);
+            </script>
+            <style>
+              .messages {
+                  position: fixed;
+                  top: 38%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  z-index: 9999;
+                  padding: 10px;
+                  background-color: #00c026;
+                  color: #fff;
+                  font-size: 12.5px;
+                  font-weight: bold;
+                  text-align: center;
+                  border-radius: 5px;
+                  list-style-type: none;
+              }
+            </style>
+            {% endif %}
+      {% endfor %}
+  </ul>
+{% endif %}
+
+</html>
